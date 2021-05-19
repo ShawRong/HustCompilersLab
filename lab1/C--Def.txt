@@ -1,0 +1,12 @@
+Stmt : T_Identifier '=' E ';'
+     ;
+
+Exp  : Exp '+' Exp
+     | Exp '-' Exp
+     | Exp '*' Exp
+     | Exp '/' Exp
+     | '-' Exp      // right
+     | T_IntConstant 
+     | T_Identifier
+     | '(' Exp ')'
+     ;

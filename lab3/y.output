@@ -1,0 +1,311 @@
+语法
+
+    0 $accept: S $end
+
+    1 S: EXP_Stmt
+    2  | S EXP_Stmt
+
+    3 EXP_Stmt: T_Identifier_NonT '=' Exp ';'
+
+    4 T_Identifier_NonT: T_Identifier
+
+    5 Exp: Exp '+' Exp
+    6    | Exp '-' Exp
+    7    | Exp '*' Exp
+    8    | Exp '/' Exp
+    9    | '-' Exp
+   10    | T_IntConstant
+   11    | T_Identifier
+   12    | '(' Exp ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 12
+')' (41) 12
+'*' (42) 7
+'+' (43) 5
+'-' (45) 6 9
+'/' (47) 8
+';' (59) 3
+'=' (61) 3
+error (256)
+T_IntConstant (258) 10
+T_Identifier (259) 4 11
+U_neg (260)
+
+
+Nonterminals, with rules where they appear
+
+$accept (14)
+    左： 0
+S (15)
+    左： 1 2, 右： 0 2
+EXP_Stmt (16)
+    左： 3, 右： 1 2
+T_Identifier_NonT (17)
+    左： 4, 右： 3
+Exp (18)
+    左： 5 6 7 8 9 10 11 12, 右： 3 5 6 7 8 9 12
+
+
+State 0
+
+    0 $accept: . S $end
+
+    T_Identifier  shift, and go to state 1
+
+    S                  转到状态 2
+    EXP_Stmt           转到状态 3
+    T_Identifier_NonT  转到状态 4
+
+
+State 1
+
+    4 T_Identifier_NonT: T_Identifier .
+
+    $default  reduce using rule 4 (T_Identifier_NonT)
+
+
+State 2
+
+    0 $accept: S . $end
+    2 S: S . EXP_Stmt
+
+    $end          shift, and go to state 5
+    T_Identifier  shift, and go to state 1
+
+    EXP_Stmt           转到状态 6
+    T_Identifier_NonT  转到状态 4
+
+
+State 3
+
+    1 S: EXP_Stmt .
+
+    $default  reduce using rule 1 (S)
+
+
+State 4
+
+    3 EXP_Stmt: T_Identifier_NonT . '=' Exp ';'
+
+    '='  shift, and go to state 7
+
+
+State 5
+
+    0 $accept: S $end .
+
+    $default  接受
+
+
+State 6
+
+    2 S: S EXP_Stmt .
+
+    $default  reduce using rule 2 (S)
+
+
+State 7
+
+    3 EXP_Stmt: T_Identifier_NonT '=' . Exp ';'
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 12
+
+
+State 8
+
+   10 Exp: T_IntConstant .
+
+    $default  reduce using rule 10 (Exp)
+
+
+State 9
+
+   11 Exp: T_Identifier .
+
+    $default  reduce using rule 11 (Exp)
+
+
+State 10
+
+    9 Exp: '-' . Exp
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 13
+
+
+State 11
+
+   12 Exp: '(' . Exp ')'
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 14
+
+
+State 12
+
+    3 EXP_Stmt: T_Identifier_NonT '=' Exp . ';'
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+
+    '+'  shift, and go to state 15
+    '-'  shift, and go to state 16
+    '*'  shift, and go to state 17
+    '/'  shift, and go to state 18
+    ';'  shift, and go to state 19
+
+
+State 13
+
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+    9    | '-' Exp .
+
+    $default  reduce using rule 9 (Exp)
+
+
+State 14
+
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+   12    | '(' Exp . ')'
+
+    '+'  shift, and go to state 15
+    '-'  shift, and go to state 16
+    '*'  shift, and go to state 17
+    '/'  shift, and go to state 18
+    ')'  shift, and go to state 20
+
+
+State 15
+
+    5 Exp: Exp '+' . Exp
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 21
+
+
+State 16
+
+    6 Exp: Exp '-' . Exp
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 22
+
+
+State 17
+
+    7 Exp: Exp '*' . Exp
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 23
+
+
+State 18
+
+    8 Exp: Exp '/' . Exp
+
+    T_IntConstant  shift, and go to state 8
+    T_Identifier   shift, and go to state 9
+    '-'            shift, and go to state 10
+    '('            shift, and go to state 11
+
+    Exp  转到状态 24
+
+
+State 19
+
+    3 EXP_Stmt: T_Identifier_NonT '=' Exp ';' .
+
+    $default  reduce using rule 3 (EXP_Stmt)
+
+
+State 20
+
+   12 Exp: '(' Exp ')' .
+
+    $default  reduce using rule 12 (Exp)
+
+
+State 21
+
+    5 Exp: Exp . '+' Exp
+    5    | Exp '+' Exp .
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+
+    '*'  shift, and go to state 17
+    '/'  shift, and go to state 18
+
+    $default  reduce using rule 5 (Exp)
+
+
+State 22
+
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    6    | Exp '-' Exp .
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+
+    '*'  shift, and go to state 17
+    '/'  shift, and go to state 18
+
+    $default  reduce using rule 6 (Exp)
+
+
+State 23
+
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    7    | Exp '*' Exp .
+    8    | Exp . '/' Exp
+
+    $default  reduce using rule 7 (Exp)
+
+
+State 24
+
+    5 Exp: Exp . '+' Exp
+    6    | Exp . '-' Exp
+    7    | Exp . '*' Exp
+    8    | Exp . '/' Exp
+    8    | Exp '/' Exp .
+
+    $default  reduce using rule 8 (Exp)

@@ -1,0 +1,23 @@
+int main(){
+	int i;
+	i = 0;
+	x = readint("input an integer.");
+	print("%d", x);	
+	while(i < 10){
+		i++;
+		i--;
+		i++;
+		if(i == 3){
+			continue;
+		}
+		if(i == 8){
+			break;	
+		}
+	}
+	switch(i){
+		case 8: print("OK");
+			break;	
+	}
+	return 0;
+}
+
