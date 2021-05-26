@@ -4,7 +4,7 @@
 #include "stdarg.h"
 #include "y.tab.h"
 
-enum node_kind  { UMINUS, EXP_STMT};
+enum node_kind  { UMINUS, ASSIGN, PRINT, VARDECL, CALL, RETURN, ARGUMENTS, ARGUMENT, FUNCDECL, FUNCSIGN, FUNCBLOCK, STMTS, PROGRAM, FUNCRET};
 
 struct opn{
     int kind;                  //标识操作的类型
@@ -29,6 +29,7 @@ struct node {    //以下对结点属性定义没有考虑存储效率，只是�
 	union {
 		  char type_id[33];             //由标识符生成的叶结点
 		  int type_int;                 //由整常数生成的叶结点
+		  char* type_string;
 	      };
     struct node *ptr[3];                   //子树指针，由kind确定有多少棵子树
     int level;                    //层号

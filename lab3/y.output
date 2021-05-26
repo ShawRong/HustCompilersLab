@@ -1,311 +1,1055 @@
 语法
 
-    0 $accept: S $end
+    0 $accept: Program $end
 
-    1 S: EXP_Stmt
-    2  | S EXP_Stmt
+    1 Program: %empty
+    2        | FuncDecl Program
 
-    3 EXP_Stmt: T_Identifier_NonT '=' Exp ';'
+    3 FuncDecl: FuncRet FuncSign FuncBlock
 
-    4 T_Identifier_NonT: T_Identifier
+    4 FuncSign: FuncName '(' Args ')'
 
-    5 Exp: Exp '+' Exp
-    6    | Exp '-' Exp
-    7    | Exp '*' Exp
-    8    | Exp '/' Exp
-    9    | '-' Exp
-   10    | T_IntConstant
-   11    | T_Identifier
-   12    | '(' Exp ')'
+    5 FuncBlock: '{' VarDecls Stmts '}'
+
+    6 FuncRet: RetType
+
+    7 RetType: T_Int
+    8        | T_Void
+
+    9 FuncName: ID
+
+   10 Args: %empty
+   11     | _Args
+
+   12 _Args: Arg
+   13      | Arg ',' _Args
+
+   14 Arg: Specifier ID
+
+   15 VarDecls: %empty
+   16         | VarDecl ';' VarDecls
+
+   17 VarDecl: Specifier DecList
+
+   18 Specifier: T_Int
+
+   19 DecList: ID
+   20        | ID ',' DecList
+
+   21 ID: T_Identifier
+
+   22 Stmts: Stmt
+   23      | Stmt Stmts
+
+   24 Stmt: AssignStmt
+   25     | PrintStmt
+   26     | CallStmt
+   27     | ReturnStmt
+
+   28 AssignStmt: T_Identifier_NonT '=' Exp ';'
+
+   29 T_Identifier_NonT: T_Identifier
+
+   30 PrintStmt: T_Print '(' String PActuals ')' ';'
+
+   31 String: T_StringConstant
+
+   32 PActuals: %empty
+   33         | ExpList
+
+   34 ExpList: ',' Exp
+   35        | ',' Exp ExpList
+
+   36 ReturnStmt: Ret Exp ';'
+   37           | Ret ';'
+
+   38 Ret: T_Return
+
+   39 CallStmt: CallExpr ';'
+
+   40 CallExpr: ID '(' Actuals ')'
+   41         | ID '(' ')'
+
+   42 Actuals: Exp
+   43        | Exp ',' Actuals
+
+   44 Exp: Exp '+' Exp
+   45    | Exp '-' Exp
+   46    | Exp '*' Exp
+   47    | Exp '/' Exp
+   48    | '-' Exp
+   49    | T_IntConstant
+   50    | T_Identifier
+   51    | '(' Exp ')'
+   52    | CallExpr
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 12
-')' (41) 12
-'*' (42) 7
-'+' (43) 5
-'-' (45) 6 9
-'/' (47) 8
-';' (59) 3
-'=' (61) 3
+'(' (40) 4 30 40 41 51
+')' (41) 4 30 40 41 51
+'*' (42) 46
+'+' (43) 44
+',' (44) 13 20 34 35 43
+'-' (45) 45 48
+'/' (47) 47
+';' (59) 16 28 30 36 37 39
+'=' (61) 28
+'{' (123) 5
+'}' (125) 5
 error (256)
-T_IntConstant (258) 10
-T_Identifier (259) 4 11
-U_neg (260)
+T_IntConstant (258) 49
+T_Identifier (259) 21 29 50
+T_Int (260) 7 18
+T_StringConstant (261) 31
+T_Print (262) 30
+T_Return (263) 38
+T_Void (264) 8
+U_neg (265)
 
 
 Nonterminals, with rules where they appear
 
-$accept (14)
+$accept (22)
     左： 0
-S (15)
+Program (23)
     左： 1 2, 右： 0 2
-EXP_Stmt (16)
-    左： 3, 右： 1 2
-T_Identifier_NonT (17)
+FuncDecl (24)
+    左： 3, 右： 2
+FuncSign (25)
     左： 4, 右： 3
-Exp (18)
-    左： 5 6 7 8 9 10 11 12, 右： 3 5 6 7 8 9 12
+FuncBlock (26)
+    左： 5, 右： 3
+FuncRet (27)
+    左： 6, 右： 3
+RetType (28)
+    左： 7 8, 右： 6
+FuncName (29)
+    左： 9, 右： 4
+Args (30)
+    左： 10 11, 右： 4
+_Args (31)
+    左： 12 13, 右： 11 13
+Arg (32)
+    左： 14, 右： 12 13
+VarDecls (33)
+    左： 15 16, 右： 5 16
+VarDecl (34)
+    左： 17, 右： 16
+Specifier (35)
+    左： 18, 右： 14 17
+DecList (36)
+    左： 19 20, 右： 17 20
+ID (37)
+    左： 21, 右： 9 14 19 20 40 41
+Stmts (38)
+    左： 22 23, 右： 5 23
+Stmt (39)
+    左： 24 25 26 27, 右： 22 23
+AssignStmt (40)
+    左： 28, 右： 24
+T_Identifier_NonT (41)
+    左： 29, 右： 28
+PrintStmt (42)
+    左： 30, 右： 25
+String (43)
+    左： 31, 右： 30
+PActuals (44)
+    左： 32 33, 右： 30
+ExpList (45)
+    左： 34 35, 右： 33 35
+ReturnStmt (46)
+    左： 36 37, 右： 27
+Ret (47)
+    左： 38, 右： 36 37
+CallStmt (48)
+    左： 39, 右： 26
+CallExpr (49)
+    左： 40 41, 右： 39 52
+Actuals (50)
+    左： 42 43, 右： 40 43
+Exp (51)
+    左： 44 45 46 47 48 49 50 51 52, 右： 28 34 35 36 42 43 44
+    45 46 47 48 51
 
 
 State 0
 
-    0 $accept: . S $end
+    0 $accept: . Program $end
 
-    T_Identifier  shift, and go to state 1
+    T_Int   shift, and go to state 1
+    T_Void  shift, and go to state 2
 
-    S                  转到状态 2
-    EXP_Stmt           转到状态 3
-    T_Identifier_NonT  转到状态 4
+    $default  reduce using rule 1 (Program)
+
+    Program   转到状态 3
+    FuncDecl  转到状态 4
+    FuncRet   转到状态 5
+    RetType   转到状态 6
 
 
 State 1
 
-    4 T_Identifier_NonT: T_Identifier .
+    7 RetType: T_Int .
 
-    $default  reduce using rule 4 (T_Identifier_NonT)
+    $default  reduce using rule 7 (RetType)
 
 
 State 2
 
-    0 $accept: S . $end
-    2 S: S . EXP_Stmt
+    8 RetType: T_Void .
 
-    $end          shift, and go to state 5
-    T_Identifier  shift, and go to state 1
-
-    EXP_Stmt           转到状态 6
-    T_Identifier_NonT  转到状态 4
+    $default  reduce using rule 8 (RetType)
 
 
 State 3
 
-    1 S: EXP_Stmt .
+    0 $accept: Program . $end
 
-    $default  reduce using rule 1 (S)
+    $end  shift, and go to state 7
 
 
 State 4
 
-    3 EXP_Stmt: T_Identifier_NonT . '=' Exp ';'
+    2 Program: FuncDecl . Program
 
-    '='  shift, and go to state 7
+    T_Int   shift, and go to state 1
+    T_Void  shift, and go to state 2
+
+    $default  reduce using rule 1 (Program)
+
+    Program   转到状态 8
+    FuncDecl  转到状态 4
+    FuncRet   转到状态 5
+    RetType   转到状态 6
 
 
 State 5
 
-    0 $accept: S $end .
+    3 FuncDecl: FuncRet . FuncSign FuncBlock
 
-    $default  接受
+    T_Identifier  shift, and go to state 9
+
+    FuncSign  转到状态 10
+    FuncName  转到状态 11
+    ID        转到状态 12
 
 
 State 6
 
-    2 S: S EXP_Stmt .
+    6 FuncRet: RetType .
 
-    $default  reduce using rule 2 (S)
+    $default  reduce using rule 6 (FuncRet)
 
 
 State 7
 
-    3 EXP_Stmt: T_Identifier_NonT '=' . Exp ';'
+    0 $accept: Program $end .
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
-
-    Exp  转到状态 12
+    $default  接受
 
 
 State 8
 
-   10 Exp: T_IntConstant .
+    2 Program: FuncDecl Program .
 
-    $default  reduce using rule 10 (Exp)
+    $default  reduce using rule 2 (Program)
 
 
 State 9
 
-   11 Exp: T_Identifier .
+   21 ID: T_Identifier .
 
-    $default  reduce using rule 11 (Exp)
+    $default  reduce using rule 21 (ID)
 
 
 State 10
 
-    9 Exp: '-' . Exp
+    3 FuncDecl: FuncRet FuncSign . FuncBlock
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
+    '{'  shift, and go to state 13
 
-    Exp  转到状态 13
+    FuncBlock  转到状态 14
 
 
 State 11
 
-   12 Exp: '(' . Exp ')'
+    4 FuncSign: FuncName . '(' Args ')'
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
-
-    Exp  转到状态 14
+    '('  shift, and go to state 15
 
 
 State 12
 
-    3 EXP_Stmt: T_Identifier_NonT '=' Exp . ';'
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
+    9 FuncName: ID .
 
-    '+'  shift, and go to state 15
-    '-'  shift, and go to state 16
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-    ';'  shift, and go to state 19
+    $default  reduce using rule 9 (FuncName)
 
 
 State 13
 
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
-    9    | '-' Exp .
+    5 FuncBlock: '{' . VarDecls Stmts '}'
 
-    $default  reduce using rule 9 (Exp)
+    T_Int  shift, and go to state 16
+
+    $default  reduce using rule 15 (VarDecls)
+
+    VarDecls   转到状态 17
+    VarDecl    转到状态 18
+    Specifier  转到状态 19
 
 
 State 14
 
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
-   12    | '(' Exp . ')'
+    3 FuncDecl: FuncRet FuncSign FuncBlock .
 
-    '+'  shift, and go to state 15
-    '-'  shift, and go to state 16
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-    ')'  shift, and go to state 20
+    $default  reduce using rule 3 (FuncDecl)
 
 
 State 15
 
-    5 Exp: Exp '+' . Exp
+    4 FuncSign: FuncName '(' . Args ')'
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
+    T_Int  shift, and go to state 16
 
-    Exp  转到状态 21
+    $default  reduce using rule 10 (Args)
+
+    Args       转到状态 20
+    _Args      转到状态 21
+    Arg        转到状态 22
+    Specifier  转到状态 23
 
 
 State 16
 
-    6 Exp: Exp '-' . Exp
+   18 Specifier: T_Int .
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
-
-    Exp  转到状态 22
+    $default  reduce using rule 18 (Specifier)
 
 
 State 17
 
-    7 Exp: Exp '*' . Exp
+    5 FuncBlock: '{' VarDecls . Stmts '}'
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
+    T_Identifier  shift, and go to state 24
+    T_Print       shift, and go to state 25
+    T_Return      shift, and go to state 26
 
-    Exp  转到状态 23
+    ID                 转到状态 27
+    Stmts              转到状态 28
+    Stmt               转到状态 29
+    AssignStmt         转到状态 30
+    T_Identifier_NonT  转到状态 31
+    PrintStmt          转到状态 32
+    ReturnStmt         转到状态 33
+    Ret                转到状态 34
+    CallStmt           转到状态 35
+    CallExpr           转到状态 36
 
 
 State 18
 
-    8 Exp: Exp '/' . Exp
+   16 VarDecls: VarDecl . ';' VarDecls
 
-    T_IntConstant  shift, and go to state 8
-    T_Identifier   shift, and go to state 9
-    '-'            shift, and go to state 10
-    '('            shift, and go to state 11
-
-    Exp  转到状态 24
+    ';'  shift, and go to state 37
 
 
 State 19
 
-    3 EXP_Stmt: T_Identifier_NonT '=' Exp ';' .
+   17 VarDecl: Specifier . DecList
 
-    $default  reduce using rule 3 (EXP_Stmt)
+    T_Identifier  shift, and go to state 9
+
+    DecList  转到状态 38
+    ID       转到状态 39
 
 
 State 20
 
-   12 Exp: '(' Exp ')' .
+    4 FuncSign: FuncName '(' Args . ')'
 
-    $default  reduce using rule 12 (Exp)
+    ')'  shift, and go to state 40
 
 
 State 21
 
-    5 Exp: Exp . '+' Exp
-    5    | Exp '+' Exp .
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
+   11 Args: _Args .
 
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
-
-    $default  reduce using rule 5 (Exp)
+    $default  reduce using rule 11 (Args)
 
 
 State 22
 
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    6    | Exp '-' Exp .
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
+   12 _Args: Arg .
+   13      | Arg . ',' _Args
 
-    '*'  shift, and go to state 17
-    '/'  shift, and go to state 18
+    ','  shift, and go to state 41
 
-    $default  reduce using rule 6 (Exp)
+    $default  reduce using rule 12 (_Args)
 
 
 State 23
 
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    7    | Exp '*' Exp .
-    8    | Exp . '/' Exp
+   14 Arg: Specifier . ID
 
-    $default  reduce using rule 7 (Exp)
+    T_Identifier  shift, and go to state 9
+
+    ID  转到状态 42
 
 
 State 24
 
-    5 Exp: Exp . '+' Exp
-    6    | Exp . '-' Exp
-    7    | Exp . '*' Exp
-    8    | Exp . '/' Exp
-    8    | Exp '/' Exp .
+   21 ID: T_Identifier .
+   29 T_Identifier_NonT: T_Identifier .
 
-    $default  reduce using rule 8 (Exp)
+    '='       reduce using rule 29 (T_Identifier_NonT)
+    $default  reduce using rule 21 (ID)
+
+
+State 25
+
+   30 PrintStmt: T_Print . '(' String PActuals ')' ';'
+
+    '('  shift, and go to state 43
+
+
+State 26
+
+   38 Ret: T_Return .
+
+    $default  reduce using rule 38 (Ret)
+
+
+State 27
+
+   40 CallExpr: ID . '(' Actuals ')'
+   41         | ID . '(' ')'
+
+    '('  shift, and go to state 44
+
+
+State 28
+
+    5 FuncBlock: '{' VarDecls Stmts . '}'
+
+    '}'  shift, and go to state 45
+
+
+State 29
+
+   22 Stmts: Stmt .
+   23      | Stmt . Stmts
+
+    T_Identifier  shift, and go to state 24
+    T_Print       shift, and go to state 25
+    T_Return      shift, and go to state 26
+
+    $default  reduce using rule 22 (Stmts)
+
+    ID                 转到状态 27
+    Stmts              转到状态 46
+    Stmt               转到状态 29
+    AssignStmt         转到状态 30
+    T_Identifier_NonT  转到状态 31
+    PrintStmt          转到状态 32
+    ReturnStmt         转到状态 33
+    Ret                转到状态 34
+    CallStmt           转到状态 35
+    CallExpr           转到状态 36
+
+
+State 30
+
+   24 Stmt: AssignStmt .
+
+    $default  reduce using rule 24 (Stmt)
+
+
+State 31
+
+   28 AssignStmt: T_Identifier_NonT . '=' Exp ';'
+
+    '='  shift, and go to state 47
+
+
+State 32
+
+   25 Stmt: PrintStmt .
+
+    $default  reduce using rule 25 (Stmt)
+
+
+State 33
+
+   27 Stmt: ReturnStmt .
+
+    $default  reduce using rule 27 (Stmt)
+
+
+State 34
+
+   36 ReturnStmt: Ret . Exp ';'
+   37           | Ret . ';'
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+    ';'            shift, and go to state 52
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 54
+
+
+State 35
+
+   26 Stmt: CallStmt .
+
+    $default  reduce using rule 26 (Stmt)
+
+
+State 36
+
+   39 CallStmt: CallExpr . ';'
+
+    ';'  shift, and go to state 55
+
+
+State 37
+
+   16 VarDecls: VarDecl ';' . VarDecls
+
+    T_Int  shift, and go to state 16
+
+    $default  reduce using rule 15 (VarDecls)
+
+    VarDecls   转到状态 56
+    VarDecl    转到状态 18
+    Specifier  转到状态 19
+
+
+State 38
+
+   17 VarDecl: Specifier DecList .
+
+    $default  reduce using rule 17 (VarDecl)
+
+
+State 39
+
+   19 DecList: ID .
+   20        | ID . ',' DecList
+
+    ','  shift, and go to state 57
+
+    $default  reduce using rule 19 (DecList)
+
+
+State 40
+
+    4 FuncSign: FuncName '(' Args ')' .
+
+    $default  reduce using rule 4 (FuncSign)
+
+
+State 41
+
+   13 _Args: Arg ',' . _Args
+
+    T_Int  shift, and go to state 16
+
+    _Args      转到状态 58
+    Arg        转到状态 22
+    Specifier  转到状态 23
+
+
+State 42
+
+   14 Arg: Specifier ID .
+
+    $default  reduce using rule 14 (Arg)
+
+
+State 43
+
+   30 PrintStmt: T_Print '(' . String PActuals ')' ';'
+
+    T_StringConstant  shift, and go to state 59
+
+    String  转到状态 60
+
+
+State 44
+
+   40 CallExpr: ID '(' . Actuals ')'
+   41         | ID '(' . ')'
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+    ')'            shift, and go to state 61
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Actuals   转到状态 62
+    Exp       转到状态 63
+
+
+State 45
+
+    5 FuncBlock: '{' VarDecls Stmts '}' .
+
+    $default  reduce using rule 5 (FuncBlock)
+
+
+State 46
+
+   23 Stmts: Stmt Stmts .
+
+    $default  reduce using rule 23 (Stmts)
+
+
+State 47
+
+   28 AssignStmt: T_Identifier_NonT '=' . Exp ';'
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 64
+
+
+State 48
+
+   49 Exp: T_IntConstant .
+
+    $default  reduce using rule 49 (Exp)
+
+
+State 49
+
+   21 ID: T_Identifier .
+   50 Exp: T_Identifier .
+
+    '('       reduce using rule 21 (ID)
+    $default  reduce using rule 50 (Exp)
+
+
+State 50
+
+   48 Exp: '-' . Exp
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 65
+
+
+State 51
+
+   51 Exp: '(' . Exp ')'
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 66
+
+
+State 52
+
+   37 ReturnStmt: Ret ';' .
+
+    $default  reduce using rule 37 (ReturnStmt)
+
+
+State 53
+
+   52 Exp: CallExpr .
+
+    $default  reduce using rule 52 (Exp)
+
+
+State 54
+
+   36 ReturnStmt: Ret Exp . ';'
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '+'  shift, and go to state 67
+    '-'  shift, and go to state 68
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+    ';'  shift, and go to state 71
+
+
+State 55
+
+   39 CallStmt: CallExpr ';' .
+
+    $default  reduce using rule 39 (CallStmt)
+
+
+State 56
+
+   16 VarDecls: VarDecl ';' VarDecls .
+
+    $default  reduce using rule 16 (VarDecls)
+
+
+State 57
+
+   20 DecList: ID ',' . DecList
+
+    T_Identifier  shift, and go to state 9
+
+    DecList  转到状态 72
+    ID       转到状态 39
+
+
+State 58
+
+   13 _Args: Arg ',' _Args .
+
+    $default  reduce using rule 13 (_Args)
+
+
+State 59
+
+   31 String: T_StringConstant .
+
+    $default  reduce using rule 31 (String)
+
+
+State 60
+
+   30 PrintStmt: T_Print '(' String . PActuals ')' ';'
+
+    ','  shift, and go to state 73
+
+    $default  reduce using rule 32 (PActuals)
+
+    PActuals  转到状态 74
+    ExpList   转到状态 75
+
+
+State 61
+
+   41 CallExpr: ID '(' ')' .
+
+    $default  reduce using rule 41 (CallExpr)
+
+
+State 62
+
+   40 CallExpr: ID '(' Actuals . ')'
+
+    ')'  shift, and go to state 76
+
+
+State 63
+
+   42 Actuals: Exp .
+   43        | Exp . ',' Actuals
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '+'  shift, and go to state 67
+    '-'  shift, and go to state 68
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+    ','  shift, and go to state 77
+
+    $default  reduce using rule 42 (Actuals)
+
+
+State 64
+
+   28 AssignStmt: T_Identifier_NonT '=' Exp . ';'
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '+'  shift, and go to state 67
+    '-'  shift, and go to state 68
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+    ';'  shift, and go to state 78
+
+
+State 65
+
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+   48    | '-' Exp .
+
+    $default  reduce using rule 48 (Exp)
+
+
+State 66
+
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+   51    | '(' Exp . ')'
+
+    '+'  shift, and go to state 67
+    '-'  shift, and go to state 68
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+    ')'  shift, and go to state 79
+
+
+State 67
+
+   44 Exp: Exp '+' . Exp
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 80
+
+
+State 68
+
+   45 Exp: Exp '-' . Exp
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 81
+
+
+State 69
+
+   46 Exp: Exp '*' . Exp
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 82
+
+
+State 70
+
+   47 Exp: Exp '/' . Exp
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 83
+
+
+State 71
+
+   36 ReturnStmt: Ret Exp ';' .
+
+    $default  reduce using rule 36 (ReturnStmt)
+
+
+State 72
+
+   20 DecList: ID ',' DecList .
+
+    $default  reduce using rule 20 (DecList)
+
+
+State 73
+
+   34 ExpList: ',' . Exp
+   35        | ',' . Exp ExpList
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Exp       转到状态 84
+
+
+State 74
+
+   30 PrintStmt: T_Print '(' String PActuals . ')' ';'
+
+    ')'  shift, and go to state 85
+
+
+State 75
+
+   33 PActuals: ExpList .
+
+    $default  reduce using rule 33 (PActuals)
+
+
+State 76
+
+   40 CallExpr: ID '(' Actuals ')' .
+
+    $default  reduce using rule 40 (CallExpr)
+
+
+State 77
+
+   43 Actuals: Exp ',' . Actuals
+
+    T_IntConstant  shift, and go to state 48
+    T_Identifier   shift, and go to state 49
+    '-'            shift, and go to state 50
+    '('            shift, and go to state 51
+
+    ID        转到状态 27
+    CallExpr  转到状态 53
+    Actuals   转到状态 86
+    Exp       转到状态 63
+
+
+State 78
+
+   28 AssignStmt: T_Identifier_NonT '=' Exp ';' .
+
+    $default  reduce using rule 28 (AssignStmt)
+
+
+State 79
+
+   51 Exp: '(' Exp ')' .
+
+    $default  reduce using rule 51 (Exp)
+
+
+State 80
+
+   44 Exp: Exp . '+' Exp
+   44    | Exp '+' Exp .
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+
+    $default  reduce using rule 44 (Exp)
+
+
+State 81
+
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   45    | Exp '-' Exp .
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+
+    $default  reduce using rule 45 (Exp)
+
+
+State 82
+
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   46    | Exp '*' Exp .
+   47    | Exp . '/' Exp
+
+    $default  reduce using rule 46 (Exp)
+
+
+State 83
+
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+   47    | Exp '/' Exp .
+
+    $default  reduce using rule 47 (Exp)
+
+
+State 84
+
+   34 ExpList: ',' Exp .
+   35        | ',' Exp . ExpList
+   44 Exp: Exp . '+' Exp
+   45    | Exp . '-' Exp
+   46    | Exp . '*' Exp
+   47    | Exp . '/' Exp
+
+    '+'  shift, and go to state 67
+    '-'  shift, and go to state 68
+    '*'  shift, and go to state 69
+    '/'  shift, and go to state 70
+    ','  shift, and go to state 73
+
+    $default  reduce using rule 34 (ExpList)
+
+    ExpList  转到状态 87
+
+
+State 85
+
+   30 PrintStmt: T_Print '(' String PActuals ')' . ';'
+
+    ';'  shift, and go to state 88
+
+
+State 86
+
+   43 Actuals: Exp ',' Actuals .
+
+    $default  reduce using rule 43 (Actuals)
+
+
+State 87
+
+   35 ExpList: ',' Exp ExpList .
+
+    $default  reduce using rule 35 (ExpList)
+
+
+State 88
+
+   30 PrintStmt: T_Print '(' String PActuals ')' ';' .
+
+    $default  reduce using rule 30 (PrintStmt)

@@ -47,13 +47,23 @@ extern int yydebug;
   {
     T_IntConstant = 258,
     T_Identifier = 259,
-    U_neg = 260
+    T_Int = 260,
+    T_StringConstant = 261,
+    T_Print = 262,
+    T_Return = 263,
+    T_Void = 264,
+    U_neg = 265
   };
 #endif
 /* Tokens.  */
 #define T_IntConstant 258
 #define T_Identifier 259
-#define U_neg 260
+#define T_Int 260
+#define T_StringConstant 261
+#define T_Print 262
+#define T_Return 263
+#define T_Void 264
+#define U_neg 265
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -64,9 +74,10 @@ union YYSTYPE
 
 	int    type_int;
 	char   type_id[32];
+        char*   type_string;
 	struct node *ptr;
 
-#line 70 "y.tab.h" /* yacc.c:1909  */
+#line 81 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
