@@ -45,133 +45,237 @@
    25     | PrintStmt
    26     | CallStmt
    27     | ReturnStmt
+   28     | IfStmt
+   29     | WhileStmt
+   30     | BreakStmt
+   31     | ContinueStmt
 
-   28 AssignStmt: T_Identifier_NonT '=' Exp ';'
+   32 AssignStmt: T_Identifier_NonT '=' Exp ';'
 
-   29 T_Identifier_NonT: T_Identifier
+   33 T_Identifier_NonT: T_Identifier
 
-   30 PrintStmt: T_Print '(' String PActuals ')' ';'
+   34 PrintStmt: T_Print '(' String PActuals ')' ';'
 
-   31 String: T_StringConstant
+   35 String: T_StringConstant
 
-   32 PActuals: %empty
-   33         | ExpList
+   36 PActuals: %empty
+   37         | ExpList
 
-   34 ExpList: ',' Exp
-   35        | ',' Exp ExpList
+   38 ExpList: ',' Exp
+   39        | ',' Exp ExpList
 
-   36 ReturnStmt: Ret Exp ';'
-   37           | Ret ';'
+   40 ReturnStmt: Ret Exp ';'
+   41           | Ret ';'
 
-   38 Ret: T_Return
+   42 Ret: T_Return
 
-   39 CallStmt: CallExpr ';'
+   43 CallStmt: CallExpr ';'
 
-   40 CallExpr: ID '(' Actuals ')'
-   41         | ID '(' ')'
+   44 CallExpr: ID '(' Actuals ')'
+   45         | ID '(' ')'
 
-   42 Actuals: Exp
-   43        | Exp ',' Actuals
+   46 Actuals: Exp
+   47        | Exp ',' Actuals
 
-   44 Exp: Exp '+' Exp
-   45    | Exp '-' Exp
-   46    | Exp '*' Exp
-   47    | Exp '/' Exp
-   48    | '-' Exp
-   49    | T_IntConstant
-   50    | T_Identifier
-   51    | '(' Exp ')'
-   52    | CallExpr
+   48 IfStmt: IfTest Then StmtsBlock EndThen EndIf
+   49       | IfTest Then StmtsBlock EndThen Else StmtsBlock EndIf
+
+   50 IfTest: If TestExpr
+
+   51 TestExpr: '(' Exp ')'
+
+   52 StmtsBlock: '{' Stmts '}'
+
+   53 If: T_If
+
+   54 Then: %empty
+
+   55 EndThen: %empty
+
+   56 Else: T_Else
+
+   57 EndIf: %empty
+
+   58 WhileStmt: WhileTest Do StmtsBlock EndWhile
+
+   59 WhileTest: While TestExpr
+
+   60 While: T_While
+
+   61 Do: %empty
+
+   62 EndWhile: %empty
+
+   63 BreakStmt: T_Break ';'
+
+   64 ContinueStmt: T_Continue ';'
+
+   65 Exp: Exp '+' Exp
+   66    | Exp '-' Exp
+   67    | Exp '*' Exp
+   68    | Exp '/' Exp
+   69    | '-' Exp
+   70    | T_IntConstant
+   71    | T_Identifier
+   72    | '(' Exp ')'
+   73    | CallExpr
+   74    | Exp '%' Exp
+   75    | Exp '>' Exp
+   76    | Exp '<' Exp
+   77    | Exp T_Ge Exp
+   78    | Exp T_Le Exp
+   79    | Exp T_Eq Exp
+   80    | Exp T_Ne Exp
+   81    | Exp T_Or Exp
+   82    | Exp T_And Exp
+   83    | '!' Exp
+   84    | ReadInt
+
+   85 ReadInt: ReadInt_NotT '(' String ')'
+
+   86 ReadInt_NotT: T_ReadInt
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 4 30 40 41 51
-')' (41) 4 30 40 41 51
-'*' (42) 46
-'+' (43) 44
-',' (44) 13 20 34 35 43
-'-' (45) 45 48
-'/' (47) 47
-';' (59) 16 28 30 36 37 39
-'=' (61) 28
-'{' (123) 5
-'}' (125) 5
+'!' (33) 83
+'%' (37) 74
+'(' (40) 4 34 44 45 51 72 85
+')' (41) 4 34 44 45 51 72 85
+'*' (42) 67
+'+' (43) 65
+',' (44) 13 20 38 39 47
+'-' (45) 66 69
+'/' (47) 68
+';' (59) 16 32 34 40 41 43 63 64
+'<' (60) 76
+'=' (61) 32
+'>' (62) 75
+'{' (123) 5 52
+'}' (125) 5 52
 error (256)
-T_IntConstant (258) 49
-T_Identifier (259) 21 29 50
+T_IntConstant (258) 70
+T_Identifier (259) 21 33 71
 T_Int (260) 7 18
-T_StringConstant (261) 31
-T_Print (262) 30
-T_Return (263) 38
-T_Void (264) 8
-U_neg (265)
+T_StringConstant (261) 35
+T_Print (262) 34
+T_ReadInt (263) 86
+T_Return (264) 42
+T_Void (265) 8
+T_While (266) 60
+T_If (267) 53
+T_Else (268) 56
+T_Break (269) 63
+T_Continue (270) 64
+T_Le (271) 78
+T_Ge (272) 77
+T_Eq (273) 79
+T_Ne (274) 80
+T_And (275) 82
+T_Or (276) 81
 
 
 Nonterminals, with rules where they appear
 
-$accept (22)
+$accept (37)
     左： 0
-Program (23)
+Program (38)
     左： 1 2, 右： 0 2
-FuncDecl (24)
+FuncDecl (39)
     左： 3, 右： 2
-FuncSign (25)
+FuncSign (40)
     左： 4, 右： 3
-FuncBlock (26)
+FuncBlock (41)
     左： 5, 右： 3
-FuncRet (27)
+FuncRet (42)
     左： 6, 右： 3
-RetType (28)
+RetType (43)
     左： 7 8, 右： 6
-FuncName (29)
+FuncName (44)
     左： 9, 右： 4
-Args (30)
+Args (45)
     左： 10 11, 右： 4
-_Args (31)
+_Args (46)
     左： 12 13, 右： 11 13
-Arg (32)
+Arg (47)
     左： 14, 右： 12 13
-VarDecls (33)
+VarDecls (48)
     左： 15 16, 右： 5 16
-VarDecl (34)
+VarDecl (49)
     左： 17, 右： 16
-Specifier (35)
+Specifier (50)
     左： 18, 右： 14 17
-DecList (36)
+DecList (51)
     左： 19 20, 右： 17 20
-ID (37)
-    左： 21, 右： 9 14 19 20 40 41
-Stmts (38)
-    左： 22 23, 右： 5 23
-Stmt (39)
-    左： 24 25 26 27, 右： 22 23
-AssignStmt (40)
-    左： 28, 右： 24
-T_Identifier_NonT (41)
-    左： 29, 右： 28
-PrintStmt (42)
-    左： 30, 右： 25
-String (43)
-    左： 31, 右： 30
-PActuals (44)
-    左： 32 33, 右： 30
-ExpList (45)
-    左： 34 35, 右： 33 35
-ReturnStmt (46)
-    左： 36 37, 右： 27
-Ret (47)
-    左： 38, 右： 36 37
-CallStmt (48)
-    左： 39, 右： 26
-CallExpr (49)
-    左： 40 41, 右： 39 52
-Actuals (50)
-    左： 42 43, 右： 40 43
-Exp (51)
-    左： 44 45 46 47 48 49 50 51 52, 右： 28 34 35 36 42 43 44
-    45 46 47 48 51
+ID (52)
+    左： 21, 右： 9 14 19 20 44 45
+Stmts (53)
+    左： 22 23, 右： 5 23 52
+Stmt (54)
+    左： 24 25 26 27 28 29 30 31, 右： 22 23
+AssignStmt (55)
+    左： 32, 右： 24
+T_Identifier_NonT (56)
+    左： 33, 右： 32
+PrintStmt (57)
+    左： 34, 右： 25
+String (58)
+    左： 35, 右： 34 85
+PActuals (59)
+    左： 36 37, 右： 34
+ExpList (60)
+    左： 38 39, 右： 37 39
+ReturnStmt (61)
+    左： 40 41, 右： 27
+Ret (62)
+    左： 42, 右： 40 41
+CallStmt (63)
+    左： 43, 右： 26
+CallExpr (64)
+    左： 44 45, 右： 43 73
+Actuals (65)
+    左： 46 47, 右： 44 47
+IfStmt (66)
+    左： 48 49, 右： 28
+IfTest (67)
+    左： 50, 右： 48 49
+TestExpr (68)
+    左： 51, 右： 50 59
+StmtsBlock (69)
+    左： 52, 右： 48 49 58
+If (70)
+    左： 53, 右： 50
+Then (71)
+    左： 54, 右： 48 49
+EndThen (72)
+    左： 55, 右： 48 49
+Else (73)
+    左： 56, 右： 49
+EndIf (74)
+    左： 57, 右： 48 49
+WhileStmt (75)
+    左： 58, 右： 29
+WhileTest (76)
+    左： 59, 右： 58
+While (77)
+    左： 60, 右： 59
+Do (78)
+    左： 61, 右： 58
+EndWhile (79)
+    左： 62, 右： 58
+BreakStmt (80)
+    左： 63, 右： 30
+ContinueStmt (81)
+    左： 64, 右： 31
+Exp (82)
+    左： 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83
+    84, 右： 32 38 39 40 46 47 51 65 66 67 68 69 72 74 75 76 77 78
+    79 80 81 82 83
+ReadInt (83)
+    左： 85, 右： 84
+ReadInt_NotT (84)
+    左： 86, 右： 85
 
 
 State 0
@@ -335,24 +439,36 @@ State 17
     T_Identifier  shift, and go to state 24
     T_Print       shift, and go to state 25
     T_Return      shift, and go to state 26
+    T_While       shift, and go to state 27
+    T_If          shift, and go to state 28
+    T_Break       shift, and go to state 29
+    T_Continue    shift, and go to state 30
 
-    ID                 转到状态 27
-    Stmts              转到状态 28
-    Stmt               转到状态 29
-    AssignStmt         转到状态 30
-    T_Identifier_NonT  转到状态 31
-    PrintStmt          转到状态 32
-    ReturnStmt         转到状态 33
-    Ret                转到状态 34
-    CallStmt           转到状态 35
-    CallExpr           转到状态 36
+    ID                 转到状态 31
+    Stmts              转到状态 32
+    Stmt               转到状态 33
+    AssignStmt         转到状态 34
+    T_Identifier_NonT  转到状态 35
+    PrintStmt          转到状态 36
+    ReturnStmt         转到状态 37
+    Ret                转到状态 38
+    CallStmt           转到状态 39
+    CallExpr           转到状态 40
+    IfStmt             转到状态 41
+    IfTest             转到状态 42
+    If                 转到状态 43
+    WhileStmt          转到状态 44
+    WhileTest          转到状态 45
+    While              转到状态 46
+    BreakStmt          转到状态 47
+    ContinueStmt       转到状态 48
 
 
 State 18
 
    16 VarDecls: VarDecl . ';' VarDecls
 
-    ';'  shift, and go to state 37
+    ';'  shift, and go to state 49
 
 
 State 19
@@ -361,15 +477,15 @@ State 19
 
     T_Identifier  shift, and go to state 9
 
-    DecList  转到状态 38
-    ID       转到状态 39
+    DecList  转到状态 50
+    ID       转到状态 51
 
 
 State 20
 
     4 FuncSign: FuncName '(' Args . ')'
 
-    ')'  shift, and go to state 40
+    ')'  shift, and go to state 52
 
 
 State 21
@@ -384,7 +500,7 @@ State 22
    12 _Args: Arg .
    13      | Arg . ',' _Args
 
-    ','  shift, and go to state 41
+    ','  shift, and go to state 53
 
     $default  reduce using rule 12 (_Args)
 
@@ -395,48 +511,76 @@ State 23
 
     T_Identifier  shift, and go to state 9
 
-    ID  转到状态 42
+    ID  转到状态 54
 
 
 State 24
 
    21 ID: T_Identifier .
-   29 T_Identifier_NonT: T_Identifier .
+   33 T_Identifier_NonT: T_Identifier .
 
-    '='       reduce using rule 29 (T_Identifier_NonT)
+    '='       reduce using rule 33 (T_Identifier_NonT)
     $default  reduce using rule 21 (ID)
 
 
 State 25
 
-   30 PrintStmt: T_Print . '(' String PActuals ')' ';'
+   34 PrintStmt: T_Print . '(' String PActuals ')' ';'
 
-    '('  shift, and go to state 43
+    '('  shift, and go to state 55
 
 
 State 26
 
-   38 Ret: T_Return .
+   42 Ret: T_Return .
 
-    $default  reduce using rule 38 (Ret)
+    $default  reduce using rule 42 (Ret)
 
 
 State 27
 
-   40 CallExpr: ID . '(' Actuals ')'
-   41         | ID . '(' ')'
+   60 While: T_While .
 
-    '('  shift, and go to state 44
+    $default  reduce using rule 60 (While)
 
 
 State 28
 
-    5 FuncBlock: '{' VarDecls Stmts . '}'
+   53 If: T_If .
 
-    '}'  shift, and go to state 45
+    $default  reduce using rule 53 (If)
 
 
 State 29
+
+   63 BreakStmt: T_Break . ';'
+
+    ';'  shift, and go to state 56
+
+
+State 30
+
+   64 ContinueStmt: T_Continue . ';'
+
+    ';'  shift, and go to state 57
+
+
+State 31
+
+   44 CallExpr: ID . '(' Actuals ')'
+   45         | ID . '(' ')'
+
+    '('  shift, and go to state 58
+
+
+State 32
+
+    5 FuncBlock: '{' VarDecls Stmts . '}'
+
+    '}'  shift, and go to state 59
+
+
+State 33
 
    22 Stmts: Stmt .
    23      | Stmt . Stmts
@@ -444,80 +588,161 @@ State 29
     T_Identifier  shift, and go to state 24
     T_Print       shift, and go to state 25
     T_Return      shift, and go to state 26
+    T_While       shift, and go to state 27
+    T_If          shift, and go to state 28
+    T_Break       shift, and go to state 29
+    T_Continue    shift, and go to state 30
 
     $default  reduce using rule 22 (Stmts)
 
-    ID                 转到状态 27
-    Stmts              转到状态 46
-    Stmt               转到状态 29
-    AssignStmt         转到状态 30
-    T_Identifier_NonT  转到状态 31
-    PrintStmt          转到状态 32
-    ReturnStmt         转到状态 33
-    Ret                转到状态 34
-    CallStmt           转到状态 35
-    CallExpr           转到状态 36
+    ID                 转到状态 31
+    Stmts              转到状态 60
+    Stmt               转到状态 33
+    AssignStmt         转到状态 34
+    T_Identifier_NonT  转到状态 35
+    PrintStmt          转到状态 36
+    ReturnStmt         转到状态 37
+    Ret                转到状态 38
+    CallStmt           转到状态 39
+    CallExpr           转到状态 40
+    IfStmt             转到状态 41
+    IfTest             转到状态 42
+    If                 转到状态 43
+    WhileStmt          转到状态 44
+    WhileTest          转到状态 45
+    While              转到状态 46
+    BreakStmt          转到状态 47
+    ContinueStmt       转到状态 48
 
 
-State 30
+State 34
 
    24 Stmt: AssignStmt .
 
     $default  reduce using rule 24 (Stmt)
 
 
-State 31
+State 35
 
-   28 AssignStmt: T_Identifier_NonT . '=' Exp ';'
+   32 AssignStmt: T_Identifier_NonT . '=' Exp ';'
 
-    '='  shift, and go to state 47
+    '='  shift, and go to state 61
 
 
-State 32
+State 36
 
    25 Stmt: PrintStmt .
 
     $default  reduce using rule 25 (Stmt)
 
 
-State 33
+State 37
 
    27 Stmt: ReturnStmt .
 
     $default  reduce using rule 27 (Stmt)
 
 
-State 34
+State 38
 
-   36 ReturnStmt: Ret . Exp ';'
-   37           | Ret . ';'
+   40 ReturnStmt: Ret . Exp ';'
+   41           | Ret . ';'
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-    ';'            shift, and go to state 52
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+    ';'            shift, and go to state 68
 
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 54
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 70
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 35
+State 39
 
    26 Stmt: CallStmt .
 
     $default  reduce using rule 26 (Stmt)
 
 
-State 36
+State 40
 
-   39 CallStmt: CallExpr . ';'
+   43 CallStmt: CallExpr . ';'
 
-    ';'  shift, and go to state 55
+    ';'  shift, and go to state 73
 
 
-State 37
+State 41
+
+   28 Stmt: IfStmt .
+
+    $default  reduce using rule 28 (Stmt)
+
+
+State 42
+
+   48 IfStmt: IfTest . Then StmtsBlock EndThen EndIf
+   49       | IfTest . Then StmtsBlock EndThen Else StmtsBlock EndIf
+
+    $default  reduce using rule 54 (Then)
+
+    Then  转到状态 74
+
+
+State 43
+
+   50 IfTest: If . TestExpr
+
+    '('  shift, and go to state 75
+
+    TestExpr  转到状态 76
+
+
+State 44
+
+   29 Stmt: WhileStmt .
+
+    $default  reduce using rule 29 (Stmt)
+
+
+State 45
+
+   58 WhileStmt: WhileTest . Do StmtsBlock EndWhile
+
+    $default  reduce using rule 61 (Do)
+
+    Do  转到状态 77
+
+
+State 46
+
+   59 WhileTest: While . TestExpr
+
+    '('  shift, and go to state 75
+
+    TestExpr  转到状态 78
+
+
+State 47
+
+   30 Stmt: BreakStmt .
+
+    $default  reduce using rule 30 (Stmt)
+
+
+State 48
+
+   31 Stmt: ContinueStmt .
+
+    $default  reduce using rule 31 (Stmt)
+
+
+State 49
 
    16 VarDecls: VarDecl ';' . VarDecls
 
@@ -525,531 +750,1430 @@ State 37
 
     $default  reduce using rule 15 (VarDecls)
 
-    VarDecls   转到状态 56
+    VarDecls   转到状态 79
     VarDecl    转到状态 18
     Specifier  转到状态 19
 
 
-State 38
+State 50
 
    17 VarDecl: Specifier DecList .
 
     $default  reduce using rule 17 (VarDecl)
 
 
-State 39
+State 51
 
    19 DecList: ID .
    20        | ID . ',' DecList
 
-    ','  shift, and go to state 57
+    ','  shift, and go to state 80
 
     $default  reduce using rule 19 (DecList)
 
 
-State 40
+State 52
 
     4 FuncSign: FuncName '(' Args ')' .
 
     $default  reduce using rule 4 (FuncSign)
 
 
-State 41
+State 53
 
    13 _Args: Arg ',' . _Args
 
     T_Int  shift, and go to state 16
 
-    _Args      转到状态 58
+    _Args      转到状态 81
     Arg        转到状态 22
     Specifier  转到状态 23
 
 
-State 42
+State 54
 
    14 Arg: Specifier ID .
 
     $default  reduce using rule 14 (Arg)
 
 
-State 43
+State 55
 
-   30 PrintStmt: T_Print '(' . String PActuals ')' ';'
+   34 PrintStmt: T_Print '(' . String PActuals ')' ';'
 
-    T_StringConstant  shift, and go to state 59
+    T_StringConstant  shift, and go to state 82
 
-    String  转到状态 60
-
-
-State 44
-
-   40 CallExpr: ID '(' . Actuals ')'
-   41         | ID '(' . ')'
-
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-    ')'            shift, and go to state 61
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Actuals   转到状态 62
-    Exp       转到状态 63
+    String  转到状态 83
 
 
-State 45
+State 56
+
+   63 BreakStmt: T_Break ';' .
+
+    $default  reduce using rule 63 (BreakStmt)
+
+
+State 57
+
+   64 ContinueStmt: T_Continue ';' .
+
+    $default  reduce using rule 64 (ContinueStmt)
+
+
+State 58
+
+   44 CallExpr: ID '(' . Actuals ')'
+   45         | ID '(' . ')'
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+    ')'            shift, and go to state 84
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Actuals       转到状态 85
+    Exp           转到状态 86
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 59
 
     5 FuncBlock: '{' VarDecls Stmts '}' .
 
     $default  reduce using rule 5 (FuncBlock)
 
 
-State 46
+State 60
 
    23 Stmts: Stmt Stmts .
 
     $default  reduce using rule 23 (Stmts)
 
 
-State 47
+State 61
 
-   28 AssignStmt: T_Identifier_NonT '=' . Exp ';'
+   32 AssignStmt: T_Identifier_NonT '=' . Exp ';'
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
 
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 64
-
-
-State 48
-
-   49 Exp: T_IntConstant .
-
-    $default  reduce using rule 49 (Exp)
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 87
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 49
+State 62
+
+   70 Exp: T_IntConstant .
+
+    $default  reduce using rule 70 (Exp)
+
+
+State 63
 
    21 ID: T_Identifier .
-   50 Exp: T_Identifier .
+   71 Exp: T_Identifier .
 
     '('       reduce using rule 21 (ID)
-    $default  reduce using rule 50 (Exp)
+    $default  reduce using rule 71 (Exp)
 
 
-State 50
+State 64
 
-   48 Exp: '-' . Exp
+   86 ReadInt_NotT: T_ReadInt .
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 65
+    $default  reduce using rule 86 (ReadInt_NotT)
 
 
-State 51
+State 65
 
-   51 Exp: '(' . Exp ')'
+   69 Exp: '-' . Exp
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
 
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 66
-
-
-State 52
-
-   37 ReturnStmt: Ret ';' .
-
-    $default  reduce using rule 37 (ReturnStmt)
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 88
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 53
+State 66
 
-   52 Exp: CallExpr .
+   83 Exp: '!' . Exp
 
-    $default  reduce using rule 52 (Exp)
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
 
-
-State 54
-
-   36 ReturnStmt: Ret Exp . ';'
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
-
-    '+'  shift, and go to state 67
-    '-'  shift, and go to state 68
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
-    ';'  shift, and go to state 71
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 89
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 55
+State 67
 
-   39 CallStmt: CallExpr ';' .
+   72 Exp: '(' . Exp ')'
 
-    $default  reduce using rule 39 (CallStmt)
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 90
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 56
+State 68
+
+   41 ReturnStmt: Ret ';' .
+
+    $default  reduce using rule 41 (ReturnStmt)
+
+
+State 69
+
+   73 Exp: CallExpr .
+
+    $default  reduce using rule 73 (Exp)
+
+
+State 70
+
+   40 ReturnStmt: Ret Exp . ';'
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ';'    shift, and go to state 104
+
+
+State 71
+
+   84 Exp: ReadInt .
+
+    $default  reduce using rule 84 (Exp)
+
+
+State 72
+
+   85 ReadInt: ReadInt_NotT . '(' String ')'
+
+    '('  shift, and go to state 105
+
+
+State 73
+
+   43 CallStmt: CallExpr ';' .
+
+    $default  reduce using rule 43 (CallStmt)
+
+
+State 74
+
+   48 IfStmt: IfTest Then . StmtsBlock EndThen EndIf
+   49       | IfTest Then . StmtsBlock EndThen Else StmtsBlock EndIf
+
+    '{'  shift, and go to state 106
+
+    StmtsBlock  转到状态 107
+
+
+State 75
+
+   51 TestExpr: '(' . Exp ')'
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 108
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 76
+
+   50 IfTest: If TestExpr .
+
+    $default  reduce using rule 50 (IfTest)
+
+
+State 77
+
+   58 WhileStmt: WhileTest Do . StmtsBlock EndWhile
+
+    '{'  shift, and go to state 106
+
+    StmtsBlock  转到状态 109
+
+
+State 78
+
+   59 WhileTest: While TestExpr .
+
+    $default  reduce using rule 59 (WhileTest)
+
+
+State 79
 
    16 VarDecls: VarDecl ';' VarDecls .
 
     $default  reduce using rule 16 (VarDecls)
 
 
-State 57
+State 80
 
    20 DecList: ID ',' . DecList
 
     T_Identifier  shift, and go to state 9
 
-    DecList  转到状态 72
-    ID       转到状态 39
+    DecList  转到状态 110
+    ID       转到状态 51
 
 
-State 58
+State 81
 
    13 _Args: Arg ',' _Args .
 
     $default  reduce using rule 13 (_Args)
 
 
-State 59
+State 82
 
-   31 String: T_StringConstant .
+   35 String: T_StringConstant .
 
-    $default  reduce using rule 31 (String)
-
-
-State 60
-
-   30 PrintStmt: T_Print '(' String . PActuals ')' ';'
-
-    ','  shift, and go to state 73
-
-    $default  reduce using rule 32 (PActuals)
-
-    PActuals  转到状态 74
-    ExpList   转到状态 75
+    $default  reduce using rule 35 (String)
 
 
-State 61
+State 83
 
-   41 CallExpr: ID '(' ')' .
+   34 PrintStmt: T_Print '(' String . PActuals ')' ';'
 
-    $default  reduce using rule 41 (CallExpr)
+    ','  shift, and go to state 111
 
+    $default  reduce using rule 36 (PActuals)
 
-State 62
-
-   40 CallExpr: ID '(' Actuals . ')'
-
-    ')'  shift, and go to state 76
+    PActuals  转到状态 112
+    ExpList   转到状态 113
 
 
-State 63
+State 84
 
-   42 Actuals: Exp .
-   43        | Exp . ',' Actuals
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
+   45 CallExpr: ID '(' ')' .
 
-    '+'  shift, and go to state 67
-    '-'  shift, and go to state 68
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
-    ','  shift, and go to state 77
-
-    $default  reduce using rule 42 (Actuals)
+    $default  reduce using rule 45 (CallExpr)
 
 
-State 64
+State 85
 
-   28 AssignStmt: T_Identifier_NonT '=' Exp . ';'
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
+   44 CallExpr: ID '(' Actuals . ')'
 
-    '+'  shift, and go to state 67
-    '-'  shift, and go to state 68
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
-    ';'  shift, and go to state 78
+    ')'  shift, and go to state 114
 
 
-State 65
+State 86
 
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
-   48    | '-' Exp .
+   46 Actuals: Exp .
+   47        | Exp . ',' Actuals
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
 
-    $default  reduce using rule 48 (Exp)
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ','    shift, and go to state 115
 
-
-State 66
-
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
-   51    | '(' Exp . ')'
-
-    '+'  shift, and go to state 67
-    '-'  shift, and go to state 68
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
-    ')'  shift, and go to state 79
-
-
-State 67
-
-   44 Exp: Exp '+' . Exp
-
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 80
+    $default  reduce using rule 46 (Actuals)
 
 
-State 68
+State 87
 
-   45 Exp: Exp '-' . Exp
+   32 AssignStmt: T_Identifier_NonT '=' Exp . ';'
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 81
-
-
-State 69
-
-   46 Exp: Exp '*' . Exp
-
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 82
-
-
-State 70
-
-   47 Exp: Exp '/' . Exp
-
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
-
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 83
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ';'    shift, and go to state 116
 
 
-State 71
+State 88
 
-   36 ReturnStmt: Ret Exp ';' .
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   69    | '-' Exp .
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
 
-    $default  reduce using rule 36 (ReturnStmt)
+    $default  reduce using rule 69 (Exp)
 
 
-State 72
+State 89
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+   83    | '!' Exp .
+
+    $default  reduce using rule 83 (Exp)
+
+
+State 90
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   72    | '(' Exp . ')'
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ')'    shift, and go to state 117
+
+
+State 91
+
+   78 Exp: Exp T_Le . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 118
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 92
+
+   77 Exp: Exp T_Ge . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 119
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 93
+
+   79 Exp: Exp T_Eq . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 120
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 94
+
+   80 Exp: Exp T_Ne . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 121
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 95
+
+   82 Exp: Exp T_And . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 122
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 96
+
+   81 Exp: Exp T_Or . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 123
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 97
+
+   76 Exp: Exp '<' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 124
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 98
+
+   75 Exp: Exp '>' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 125
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 99
+
+   65 Exp: Exp '+' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 126
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 100
+
+   66 Exp: Exp '-' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 127
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 101
+
+   67 Exp: Exp '*' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 128
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 102
+
+   68 Exp: Exp '/' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 129
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 103
+
+   74 Exp: Exp '%' . Exp
+
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
+
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 130
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
+
+
+State 104
+
+   40 ReturnStmt: Ret Exp ';' .
+
+    $default  reduce using rule 40 (ReturnStmt)
+
+
+State 105
+
+   85 ReadInt: ReadInt_NotT '(' . String ')'
+
+    T_StringConstant  shift, and go to state 82
+
+    String  转到状态 131
+
+
+State 106
+
+   52 StmtsBlock: '{' . Stmts '}'
+
+    T_Identifier  shift, and go to state 24
+    T_Print       shift, and go to state 25
+    T_Return      shift, and go to state 26
+    T_While       shift, and go to state 27
+    T_If          shift, and go to state 28
+    T_Break       shift, and go to state 29
+    T_Continue    shift, and go to state 30
+
+    ID                 转到状态 31
+    Stmts              转到状态 132
+    Stmt               转到状态 33
+    AssignStmt         转到状态 34
+    T_Identifier_NonT  转到状态 35
+    PrintStmt          转到状态 36
+    ReturnStmt         转到状态 37
+    Ret                转到状态 38
+    CallStmt           转到状态 39
+    CallExpr           转到状态 40
+    IfStmt             转到状态 41
+    IfTest             转到状态 42
+    If                 转到状态 43
+    WhileStmt          转到状态 44
+    WhileTest          转到状态 45
+    While              转到状态 46
+    BreakStmt          转到状态 47
+    ContinueStmt       转到状态 48
+
+
+State 107
+
+   48 IfStmt: IfTest Then StmtsBlock . EndThen EndIf
+   49       | IfTest Then StmtsBlock . EndThen Else StmtsBlock EndIf
+
+    $default  reduce using rule 55 (EndThen)
+
+    EndThen  转到状态 133
+
+
+State 108
+
+   51 TestExpr: '(' Exp . ')'
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ')'    shift, and go to state 134
+
+
+State 109
+
+   58 WhileStmt: WhileTest Do StmtsBlock . EndWhile
+
+    $default  reduce using rule 62 (EndWhile)
+
+    EndWhile  转到状态 135
+
+
+State 110
 
    20 DecList: ID ',' DecList .
 
     $default  reduce using rule 20 (DecList)
 
 
-State 73
+State 111
 
-   34 ExpList: ',' . Exp
-   35        | ',' . Exp ExpList
+   38 ExpList: ',' . Exp
+   39        | ',' . Exp ExpList
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
 
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Exp       转到状态 84
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Exp           转到状态 136
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 74
+State 112
 
-   30 PrintStmt: T_Print '(' String PActuals . ')' ';'
+   34 PrintStmt: T_Print '(' String PActuals . ')' ';'
 
-    ')'  shift, and go to state 85
+    ')'  shift, and go to state 137
 
 
-State 75
+State 113
 
-   33 PActuals: ExpList .
+   37 PActuals: ExpList .
 
-    $default  reduce using rule 33 (PActuals)
+    $default  reduce using rule 37 (PActuals)
 
 
-State 76
+State 114
 
-   40 CallExpr: ID '(' Actuals ')' .
+   44 CallExpr: ID '(' Actuals ')' .
 
-    $default  reduce using rule 40 (CallExpr)
+    $default  reduce using rule 44 (CallExpr)
 
 
-State 77
+State 115
 
-   43 Actuals: Exp ',' . Actuals
+   47 Actuals: Exp ',' . Actuals
 
-    T_IntConstant  shift, and go to state 48
-    T_Identifier   shift, and go to state 49
-    '-'            shift, and go to state 50
-    '('            shift, and go to state 51
+    T_IntConstant  shift, and go to state 62
+    T_Identifier   shift, and go to state 63
+    T_ReadInt      shift, and go to state 64
+    '-'            shift, and go to state 65
+    '!'            shift, and go to state 66
+    '('            shift, and go to state 67
 
-    ID        转到状态 27
-    CallExpr  转到状态 53
-    Actuals   转到状态 86
-    Exp       转到状态 63
+    ID            转到状态 31
+    CallExpr      转到状态 69
+    Actuals       转到状态 138
+    Exp           转到状态 86
+    ReadInt       转到状态 71
+    ReadInt_NotT  转到状态 72
 
 
-State 78
+State 116
 
-   28 AssignStmt: T_Identifier_NonT '=' Exp ';' .
+   32 AssignStmt: T_Identifier_NonT '=' Exp ';' .
 
-    $default  reduce using rule 28 (AssignStmt)
+    $default  reduce using rule 32 (AssignStmt)
 
 
-State 79
+State 117
 
-   51 Exp: '(' Exp ')' .
+   72 Exp: '(' Exp ')' .
 
-    $default  reduce using rule 51 (Exp)
+    $default  reduce using rule 72 (Exp)
 
 
-State 80
+State 118
 
-   44 Exp: Exp . '+' Exp
-   44    | Exp '+' Exp .
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   78    | Exp T_Le Exp .
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
 
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
+    '+'  shift, and go to state 99
+    '-'  shift, and go to state 100
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
 
-    $default  reduce using rule 44 (Exp)
+    $default  reduce using rule 78 (Exp)
 
 
-State 81
+State 119
 
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   45    | Exp '-' Exp .
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   77    | Exp T_Ge Exp .
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    '+'  shift, and go to state 99
+    '-'  shift, and go to state 100
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
+
+    $default  reduce using rule 77 (Exp)
+
+
+State 120
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   79    | Exp T_Eq Exp .
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    T_Le  shift, and go to state 91
+    T_Ge  shift, and go to state 92
+    '<'   shift, and go to state 97
+    '>'   shift, and go to state 98
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+    '*'   shift, and go to state 101
+    '/'   shift, and go to state 102
+    '%'   shift, and go to state 103
+
+    $default  reduce using rule 79 (Exp)
+
+
+State 121
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   80    | Exp T_Ne Exp .
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    T_Le  shift, and go to state 91
+    T_Ge  shift, and go to state 92
+    '<'   shift, and go to state 97
+    '>'   shift, and go to state 98
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+    '*'   shift, and go to state 101
+    '/'   shift, and go to state 102
+    '%'   shift, and go to state 103
+
+    $default  reduce using rule 80 (Exp)
+
+
+State 122
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+   82    | Exp T_And Exp .
+
+    T_Le  shift, and go to state 91
+    T_Ge  shift, and go to state 92
+    T_Eq  shift, and go to state 93
+    T_Ne  shift, and go to state 94
+    '<'   shift, and go to state 97
+    '>'   shift, and go to state 98
+    '+'   shift, and go to state 99
+    '-'   shift, and go to state 100
+    '*'   shift, and go to state 101
+    '/'   shift, and go to state 102
+    '%'   shift, and go to state 103
+
+    $default  reduce using rule 82 (Exp)
+
+
+State 123
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   81    | Exp T_Or Exp .
+   82    | Exp . T_And Exp
+
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+
+    $default  reduce using rule 81 (Exp)
+
+
+State 124
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   76    | Exp '<' Exp .
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    '+'  shift, and go to state 99
+    '-'  shift, and go to state 100
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
+
+    $default  reduce using rule 76 (Exp)
+
+
+State 125
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   75    | Exp '>' Exp .
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    '+'  shift, and go to state 99
+    '-'  shift, and go to state 100
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
+
+    $default  reduce using rule 75 (Exp)
+
+
+State 126
+
+   65 Exp: Exp . '+' Exp
+   65    | Exp '+' Exp .
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
+
+    $default  reduce using rule 65 (Exp)
+
+
+State 127
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   66    | Exp '-' Exp .
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    '*'  shift, and go to state 101
+    '/'  shift, and go to state 102
+    '%'  shift, and go to state 103
+
+    $default  reduce using rule 66 (Exp)
+
+
+State 128
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   67    | Exp '*' Exp .
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    $default  reduce using rule 67 (Exp)
+
+
+State 129
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   68    | Exp '/' Exp .
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    $default  reduce using rule 68 (Exp)
+
+
+State 130
+
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   74    | Exp '%' Exp .
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
+
+    $default  reduce using rule 74 (Exp)
+
+
+State 131
+
+   85 ReadInt: ReadInt_NotT '(' String . ')'
+
+    ')'  shift, and go to state 139
+
+
+State 132
+
+   52 StmtsBlock: '{' Stmts . '}'
+
+    '}'  shift, and go to state 140
+
+
+State 133
+
+   48 IfStmt: IfTest Then StmtsBlock EndThen . EndIf
+   49       | IfTest Then StmtsBlock EndThen . Else StmtsBlock EndIf
 
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
+    T_Else  shift, and go to state 141
 
-    $default  reduce using rule 45 (Exp)
+    $default  reduce using rule 57 (EndIf)
 
+    Else   转到状态 142
+    EndIf  转到状态 143
 
-State 82
 
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   46    | Exp '*' Exp .
-   47    | Exp . '/' Exp
+State 134
 
-    $default  reduce using rule 46 (Exp)
+   51 TestExpr: '(' Exp ')' .
 
+    $default  reduce using rule 51 (TestExpr)
 
-State 83
 
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
-   47    | Exp '/' Exp .
+State 135
 
-    $default  reduce using rule 47 (Exp)
+   58 WhileStmt: WhileTest Do StmtsBlock EndWhile .
 
+    $default  reduce using rule 58 (WhileStmt)
 
-State 84
 
-   34 ExpList: ',' Exp .
-   35        | ',' Exp . ExpList
-   44 Exp: Exp . '+' Exp
-   45    | Exp . '-' Exp
-   46    | Exp . '*' Exp
-   47    | Exp . '/' Exp
+State 136
 
-    '+'  shift, and go to state 67
-    '-'  shift, and go to state 68
-    '*'  shift, and go to state 69
-    '/'  shift, and go to state 70
-    ','  shift, and go to state 73
+   38 ExpList: ',' Exp .
+   39        | ',' Exp . ExpList
+   65 Exp: Exp . '+' Exp
+   66    | Exp . '-' Exp
+   67    | Exp . '*' Exp
+   68    | Exp . '/' Exp
+   74    | Exp . '%' Exp
+   75    | Exp . '>' Exp
+   76    | Exp . '<' Exp
+   77    | Exp . T_Ge Exp
+   78    | Exp . T_Le Exp
+   79    | Exp . T_Eq Exp
+   80    | Exp . T_Ne Exp
+   81    | Exp . T_Or Exp
+   82    | Exp . T_And Exp
 
-    $default  reduce using rule 34 (ExpList)
+    T_Le   shift, and go to state 91
+    T_Ge   shift, and go to state 92
+    T_Eq   shift, and go to state 93
+    T_Ne   shift, and go to state 94
+    T_And  shift, and go to state 95
+    T_Or   shift, and go to state 96
+    '<'    shift, and go to state 97
+    '>'    shift, and go to state 98
+    '+'    shift, and go to state 99
+    '-'    shift, and go to state 100
+    '*'    shift, and go to state 101
+    '/'    shift, and go to state 102
+    '%'    shift, and go to state 103
+    ','    shift, and go to state 111
 
-    ExpList  转到状态 87
+    $default  reduce using rule 38 (ExpList)
 
+    ExpList  转到状态 144
 
-State 85
 
-   30 PrintStmt: T_Print '(' String PActuals ')' . ';'
+State 137
 
-    ';'  shift, and go to state 88
+   34 PrintStmt: T_Print '(' String PActuals ')' . ';'
 
+    ';'  shift, and go to state 145
 
-State 86
 
-   43 Actuals: Exp ',' Actuals .
+State 138
 
-    $default  reduce using rule 43 (Actuals)
+   47 Actuals: Exp ',' Actuals .
 
+    $default  reduce using rule 47 (Actuals)
 
-State 87
 
-   35 ExpList: ',' Exp ExpList .
+State 139
 
-    $default  reduce using rule 35 (ExpList)
+   85 ReadInt: ReadInt_NotT '(' String ')' .
 
+    $default  reduce using rule 85 (ReadInt)
 
-State 88
 
-   30 PrintStmt: T_Print '(' String PActuals ')' ';' .
+State 140
 
-    $default  reduce using rule 30 (PrintStmt)
+   52 StmtsBlock: '{' Stmts '}' .
+
+    $default  reduce using rule 52 (StmtsBlock)
+
+
+State 141
+
+   56 Else: T_Else .
+
+    $default  reduce using rule 56 (Else)
+
+
+State 142
+
+   49 IfStmt: IfTest Then StmtsBlock EndThen Else . StmtsBlock EndIf
+
+    '{'  shift, and go to state 106
+
+    StmtsBlock  转到状态 146
+
+
+State 143
+
+   48 IfStmt: IfTest Then StmtsBlock EndThen EndIf .
+
+    $default  reduce using rule 48 (IfStmt)
+
+
+State 144
+
+   39 ExpList: ',' Exp ExpList .
+
+    $default  reduce using rule 39 (ExpList)
+
+
+State 145
+
+   34 PrintStmt: T_Print '(' String PActuals ')' ';' .
+
+    $default  reduce using rule 34 (PrintStmt)
+
+
+State 146
+
+   49 IfStmt: IfTest Then StmtsBlock EndThen Else StmtsBlock . EndIf
+
+    $default  reduce using rule 57 (EndIf)
+
+    EndIf  转到状态 147
+
+
+State 147
+
+   49 IfStmt: IfTest Then StmtsBlock EndThen Else StmtsBlock EndIf .
+
+    $default  reduce using rule 49 (IfStmt)

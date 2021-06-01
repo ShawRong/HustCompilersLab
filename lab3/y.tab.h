@@ -50,9 +50,20 @@ extern int yydebug;
     T_Int = 260,
     T_StringConstant = 261,
     T_Print = 262,
-    T_Return = 263,
-    T_Void = 264,
-    U_neg = 265
+    T_ReadInt = 263,
+    T_Return = 264,
+    T_Void = 265,
+    T_While = 266,
+    T_If = 267,
+    T_Else = 268,
+    T_Break = 269,
+    T_Continue = 270,
+    T_Le = 271,
+    T_Ge = 272,
+    T_Eq = 273,
+    T_Ne = 274,
+    T_And = 275,
+    T_Or = 276
   };
 #endif
 /* Tokens.  */
@@ -61,9 +72,20 @@ extern int yydebug;
 #define T_Int 260
 #define T_StringConstant 261
 #define T_Print 262
-#define T_Return 263
-#define T_Void 264
-#define U_neg 265
+#define T_ReadInt 263
+#define T_Return 264
+#define T_Void 265
+#define T_While 266
+#define T_If 267
+#define T_Else 268
+#define T_Break 269
+#define T_Continue 270
+#define T_Le 271
+#define T_Ge 272
+#define T_Eq 273
+#define T_Ne 274
+#define T_And 275
+#define T_Or 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -77,7 +99,7 @@ union YYSTYPE
         char*   type_string;
 	struct node *ptr;
 
-#line 81 "y.tab.h" /* yacc.c:1909  */
+#line 103 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

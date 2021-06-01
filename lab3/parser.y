@@ -19,7 +19,7 @@ void display(struct node *,int);
 	struct node *ptr;
 };
 
-%type <ptr> Stmts Stmt Exp T_Identifier_NonT VarDecls VarDecl Specifier DecList ID AssignStmt PrintStmt ReturnStmt CallStmt CallExpr String Actuals PActuals ExpList Program FuncDecl FuncSign FuncBlock RetType FuncName Args _Args Arg Ret FuncRet
+%type <ptr> Stmts Stmt Exp T_Identifier_NonT VarDecls VarDecl Specifier DecList ID AssignStmt PrintStmt ReturnStmt CallStmt CallExpr String Actuals PActuals ExpList Program FuncDecl FuncSign FuncBlock RetType FuncName Args _Args Arg Ret FuncRet IfStmt IfTest TestExpr StmtsBlock WhileStmt WhileTest BreakStmt ContinueStmt ReadInt ReadInt_NotT
 
 
 %start Program
@@ -32,7 +32,17 @@ void display(struct node *,int);
 %token <type_id> T_ReadInt
 %token <type_id> T_Return
 %token <type_id> T_Void
-%token <type_id> T_While T_If T_Else T_Break T_Continue T_Le T_Ge T_Eq T_Ne T_And T_Or
+%token <type_id> T_While
+%token <type_id> T_If
+%token <type_id> T_Else
+%token <type_id> T_Break
+%token <type_id> T_Continue
+%token <type_id> T_Le
+%token <type_id> T_Ge
+%token <type_id> T_Eq
+%token <type_id> T_Ne
+%token <type_id> T_And
+%token <type_id> T_Or
 
 %left '='
 %left T_Or
@@ -103,8 +113,12 @@ Stmts   :   Stmt                    	{ $$=mknode(STMTS,$1,NULL,NULL,yylineno); }
 
 Stmt:   AssignStmt                         { $$=$1; }
     |   PrintStmt                          { $$=$1; }
-    |   CallStmt		       { $$=$1; }
-    |   ReturnStmt                     { $$=$1; }
+    |   CallStmt		           { $$=$1; }
+    |   ReturnStmt                         { $$=$1; }
+    |   IfStmt                             { $$=$1; }
+    |   WhileStmt                          { $$=$1; }
+    |   BreakStmt                          { $$=$1; }
+    |   ContinueStmt                       { $$=$1; }
     ;
 
 AssignStmt: T_Identifier_NonT '=' Exp ';'  { $$=mknode(ASSIGN,$1,$3,NULL,yylineno); }
@@ -145,64 +159,82 @@ Actuals   : Exp             { $$=$1; }
           | Exp ',' Actuals { $$=mknode(',',$1,$3,NULL,yylineno); strcpy($$->type_id,","); }
           ;
 
-IfStmt:    If TestExpr Then StmtsBlock EndThen EndIf                  { /* empty */ }
-      |    If TestExpr Then StmtsBlock EndThen Else StmtsBlock EndIf  { /* empty */ }
+IfStmt:    IfTest Then StmtsBlock EndThen EndIf                  { $$=mknode(IFSTMT,$1,$3,NULL,yylineno); }
+      |    IfTest Then StmtsBlock EndThen Else StmtsBlock EndIf  { $$=mknode(IFSTMT,$1,$3,$6,yylineno); }
       ;
 
-TestExpr:   '(' Expr ')'            { /* empty */ }
+IfTest : If TestExpr                { $$=mknode(IFTEST,$2,NULL,NULL,yylineno); }
+       ;
+
+TestExpr:   '(' Exp ')'             { $$=$2; }
         ;
 
-StmtsBlock: '{' Stmts '}'           { /* empty */ }
+StmtsBlock: '{' Stmts '}'           { $$=mknode(STMTSBLOCK,$2,NULL,NULL,yylineno); }
           ;
 
-If:         T_If                    { _BEG_IF; printf("_begIf_%d:\n", _i); }
+If:         T_If                    { /* empty */ }
   ;
 
-Then:       /* empty */             { printf("\tjz _elIf_%d\n", _i); }
+Then:       /* empty */             { /* empty */ }
     ;
 
-EndThen:    /* empty */             { printf("\tjmp _endIf_%d\n_elIf_%d:\n", _i, _i); }
+EndThen:    /* empty */             { /* empty */ }
        ;
 
 Else:       T_Else                  { /* empty */ }
     ;
 
-EndIf:      /* empty */             { printf("_endIf_%d:\n\n", _i); _END_IF; }
+EndIf:      /* empty */             { /* empty */ }
      ;
 
-WhileStmt:  While TestExpr Do StmtsBlock EndWhile   { /* empty */ }
+WhileStmt:  WhileTest Do StmtsBlock EndWhile   { $$=mknode(WHILESTMT,$1,$3,NULL,yylineno); }
          ;
 
-While:      T_While                 { _BEG_WHILE; printf("_begWhile_%d:\n", _w); }
+WhileTest:  While TestExpr          { $$=mknode(WHILETEST,$2,NULL,NULL,yylineno); }
+         ;
+
+While:      T_While                 { /* empty */ }
      ;    
 
-Do:         /* empty */             { printf("\tjz _endWhile_%d\n", _w); }
+Do:         /* empty */             { /* empty */ }
   ;
 
-EndWhile:   /* empty */             { printf("\tjmp _begWhile_%d\n_endWhile_%d:\n\n", _w, _w); _END_WHILE; }
+EndWhile:   /* empty */             { /* empty */ }
         ;
 
-BreakStmt:  T_Break ';'             { printf("\tjmp _endWhile_%d\n", _w); }
+BreakStmt:  T_Break ';'             { $$=mknode(T_Break,NULL,NULL,NULL,yylineno); strcpy($$->type_id,"BREAK"); }
          ;
 
-ContinueStmt: T_Continue ';'        { printf("\tjmp _begWhile_%d\n", _w); }
+ContinueStmt: T_Continue ';'        { $$=mknode(T_Continue,NULL,NULL,NULL,yylineno); strcpy($$->type_id,"Continue"); }
             ;
-
-ReadInt:  T_ReadInt '(' T_StringConstant ')' { printf("\treadint %s\n", $3); }
-       ;
 
 Exp   :   Exp '+' Exp                 { $$=mknode('+',$1,$3,NULL,yylineno); strcpy($$->type_id,"+"); }
     |   Exp '-' Exp                   { $$=mknode('-',$1,$3,NULL,yylineno); strcpy($$->type_id,"-"); }
     |   Exp '*' Exp                   { $$=mknode('*',$1,$3,NULL,yylineno); strcpy($$->type_id,"*"); }
     |   Exp '/' Exp                   { $$=mknode('/',$1,$3,NULL,yylineno); strcpy($$->type_id,"/"); }
-    |   '-' Exp %prec '!'           { $$=mknode(UMINUS,$2,NULL,NULL,yylineno); strcpy($$->type_id,"UMINUS"); }
+    |   '-' Exp %prec '!'             { $$=mknode(UMINUS,$2,NULL,NULL,yylineno); strcpy($$->type_id,"UMINUS"); }
     |   T_IntConstant                 { $$=mknode(T_IntConstant,NULL,NULL,NULL,yylineno); $$->type_int = $1; }
     |   T_Identifier                  { $$=mknode(T_Identifier,NULL,NULL,NULL,yylineno); strcpy($$->type_id,$1); }
     |   '(' Exp ')'                   { $$=$2; }
     |   CallExpr                      { $$=$1; }
+    |   Exp '%' Exp		      { $$=mknode('%',$1,$3,NULL,yylineno); strcpy($$->type_id,"%"); }
+    |   Exp '>' Exp                   { $$=mknode('>',$1,$3,NULL,yylineno); strcpy($$->type_id,">"); }
+    |   Exp '<' Exp                   { $$=mknode('<',$1,$3,NULL,yylineno); strcpy($$->type_id,"<"); }
+    |   Exp T_Ge Exp                  { $$=mknode(T_Ge,$1,$3,NULL,yylineno); strcpy($$->type_id,">="); }
+    |   Exp T_Le Exp                  { $$=mknode(T_Le,$1,$3,NULL,yylineno); strcpy($$->type_id,"<="); }
+    |   Exp T_Eq Exp                  { $$=mknode(T_Eq,$1,$3,NULL,yylineno); strcpy($$->type_id,"=="); }
+    |   Exp T_Ne Exp                  { $$=mknode(T_Ne,$1,$3,NULL,yylineno); strcpy($$->type_id,"!="); }
+    |   Exp T_Or Exp                  { $$=mknode(T_Or,$1,$3,NULL,yylineno); strcpy($$->type_id,"OR"); }
+    |   Exp T_And Exp                 { $$=mknode(T_And,$1,$3,NULL,yylineno); strcpy($$->type_id,"AND"); }
+    |   '!' Exp                       { $$=mknode(NOT,$2,NULL,NULL,yylineno); strcpy($$->type_id,"NOT"); }
+    |   ReadInt                       { $$=$1; }
     ;
 
+ReadInt: ReadInt_NotT '(' String ')' { $$=mknode(READINT,$1,$3,NULL,yylineno); strcpy($$->type_id, "READINT"); }
+       ;
 
+ReadInt_NotT:T_ReadInt               { $$=mknode(T_ReadInt,NULL,NULL,NULL,yylineno); }
+            ;
 
 %%
 
