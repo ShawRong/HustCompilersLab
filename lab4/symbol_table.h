@@ -1,31 +1,13 @@
 #include <stdlib.h>
+#include <string.h>
 #define STACK_INIT_SIZE  1000;
 #define STACKINCERMENT 100;
 
 typedef enum TinyCCategory{
     Variable,
     Function,
+    Block
 } TinyCCategory;
-
-typedef struct FunctionDepictor {
-    char* functionanme;
-    FormalScope formalscope;
-    LocalScope localScope;
-} FunctionDepictor;
-
-typedef union Depictor {
-    FunctionDepictor funcdsp;
-} Depictor;
-
-typedef struct GlobalScopeEntry{
-    char* name;
-    TinyCCategory category;
-    Depictor depictor;
-    struct GlobalScopeEntry* next;
-} GlobalScopeEntry;
-
-typedef GlobalScopeEntry* GlobalScope;
-
 
 //Local
 typedef struct LocalScopeEntry {
@@ -45,6 +27,24 @@ typedef struct FormalScopeEntry {
 } FormalScopeEntry;
 
 typedef FormalScopeEntry* FormalScope;
+
+typedef struct FunctionDepictor {
+    char* functionname;
+    FormalScope formalscope;
+    LocalScope localScope;
+} FunctionDepictor;
+
+typedef union Depictor {
+    FunctionDepictor funcdsp;
+} Depictor;
+
+typedef struct GlobalScopeEntry{
+    char* name;
+    Depictor depictor;
+    struct GlobalScopeEntry* next;
+} GlobalScopeEntry;
+
+typedef GlobalScopeEntry* GlobalScope;
 
 
 typedef enum ScopeType {
@@ -101,19 +101,18 @@ void PopScopeStack(ScopeStack* stack, Scope* scope){
 }
 
 //global
-GlobalScope AddIntoGlobal(GlobalScope global_symtable, char* name, TinyCCategory category, Depicotr depictor){
+GlobalScope AddIntoGlobal(GlobalScope global_symtable, char* name, Depicotr depictor){
     char* cache = (char*)malloc(sizeof(char) * strlen(name));
     strcpy(cache, name);
     GlobalScope tmp = (GlobalScope)malloc(sizeof(GlobalScopeEntry));
     tmp->name = cache;
-    tmp->category = category;
     tmp->depictor = depictor;
     tmp->next = global_symtable;
     return tmp;
 }
 
 //local
-LocalScope AddIntoLocal(LocalScope local_symtable, char* name, TinyCCategory category, char* type,  LocalScope embeddscope){
+LocalScope AddIntoLocal(LocalScope local_symtable, char* name, TinyCCategory category,  LocalScope embeddscope){
     char* cache = (char*)malloc(sizeof(char) * strlen(name));
     strcpy(cache, name);
     LocalScope tmp = (LocalScope)malloc(sizeof(LocalScopeEntry));
@@ -125,7 +124,7 @@ LocalScope AddIntoLocal(LocalScope local_symtable, char* name, TinyCCategory cat
 }
 
 //formal
-FormalScope AddIntoFormal(Formal formal_symtable,  char* name,  char* type, LocalScope functionscope){
+FormalScope AddIntoFormal(Formal formal_symtable,  char* name, LocalScope functionscope){
     char* cache = (char*)malloc(sizeof(char) * strlen(name));
     strcpy(cache, name);
     FormalScope tmp = (FormalScope)malloc(sizeof(FormalScopeEntry));
@@ -148,7 +147,23 @@ GlobalScope FindInGlobal(ScopeStack* stack, char* function_name){
 }
 
 //find
-LocalScope FindInLocal(ScopeStack* stack, char* function_name, char* local_name, TinyCCategory category){
+LocalScope FindInLocal(LocalScope localscope, char* local_name, TinyCCategory category){
+    while(localscope){
+	if(!strcmp(localscope->name, local_name) && localscope->category == category){
+            return localscope;
+        }
+	if(localscope->category == Block){
+            LocalScope result = FindInLocal(localscope->embededscope, local_name, category);
+	    if(result){
+                return result;
+            }
+        }
+    }
+    return NULL;
+}
+
+//find
+LocalScope FindInFunc(ScopeStack* stack, char* function_name, char* local_name, TinyCCategory category){
     GlobalScope globalscope = stack->base->globalscope;
     LocalScope localscope = NULL;
     while(globalscope){
@@ -158,13 +173,7 @@ LocalScope FindInLocal(ScopeStack* stack, char* function_name, char* local_name,
         }
         globalscope = globalscope->next;
     }
-    while(localscope){
-        if(!strcmp(localscop->name, local_name) && localscope->category == category){
-            return localscope;
-        }
-        localscope = localscope->next;
-    }
-    return NULL;
+    return FindInLocal(localscope, local_name, category);
 }
 
 //find
