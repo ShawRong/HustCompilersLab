@@ -55,7 +55,7 @@ void display(struct node *,int);
 
 %%
 Program: /*empty*/		{ $$=NULL; }
-       | FuncDecl Program       { display($1,0); }
+       | FuncDecl Program       { $$=mknode(PROGRAM,$1,$2,NULL,yylineno); /*display($1,0);*/ }
        ;
 
 FuncDecl: FuncRet FuncSign FuncBlock { $$=mknode(FUNCDECL,$1,$2,$3,yylineno); }
