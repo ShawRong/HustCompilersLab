@@ -3,21 +3,24 @@
 #include "string.h"
 #include "stdarg.h"
 #include "y.tab.h"
-#include "scope.h"
+#define MAXLENGTH   200
+#define DX 3*sizeof(int)
 
 enum node_kind  { UMINUS, ASSIGN, PRINT, VARDECL, CALL, RETURN, ARGUMENTS, ARGUMENT, FUNCDECL, FUNCSIGN, FUNCBLOCK, STMTS, PROGRAM, FUNCRET, READINT, IF, ELSE, IFTEST, IFSTMT, WHILETEST, WHILESTMT, STMTSBLOCK, NOT};
 
+int LEV;
+
 struct opn{
-    int kind;                  //标识操作的类型
-    int type;                  //标识操作数的类型
+    int kind;    //标识联合成员的属性
     union {
         int     const_int;      //整常数值，立即数
-        char    const_char;    //字符常数值，立即数
-        char    id[33];        //变量或临时变量的别名或标号字符串
+        char    const_char;     //字符常数值，立即数
+        char    id[33];         //变量或临时变量的别名或标号字符串
         };
-    int level;                 //变量的层号，0表示是全局变量，数据保存在静态数据区
-    int offset;                 //变量单元偏移量，或函数在符号表的定义位置序号，目标代码生成时用
+    int level;                  //变量的层号，0表示是全局变量，数据保存在静态数据区
+    int offset;                 //偏移量，目标代码生成时用
 };
+
 
 typedef struct node {    //以下对结点属性定义没有考虑存储效率，只是简单地列出要用到的一些属性
 	enum node_kind kind;               //结点类型
@@ -27,10 +30,44 @@ typedef struct node {    //以下对结点属性定义没有考虑存储效率�
 		  char* type_string;
 	      };
     	struct node *ptr[3];                   //子树指针，由kind确定有多少棵子树
-    	int pos;
+    	int pos;    //位置行号
+	int offset;
+        int num;
+	int place;
+	int width;
+	int code;
+	char Snext[15];               //结点对应语句S执行后的下一条语句位置标号
 }node;
 
+struct symbol {
+	char name[33];   //变量或函数名
+    	int level;        //层号
+    	int  paramnum;  //对函数适用，记录形式参数个数
+    	char alias[10];   //别名，为解决嵌套层次使用
+    	char flag;       //符号标记，函数：'F'  变量：'V'   参数：'P'  临时变量：'T'
+	char offset;      //外部变量和局部变量在其静态数据区或活动记录中的偏移量，
+	//或记录函数活动记录大小，目标代码生成时使用
+    	//函数入口等实验可能会用到的属性...
+}
 
-struct node *mknode(int kind,struct node *first,struct node *second, struct node *third,int pos );
+typedef struct symboltable {
+	struct symbol symbols[MAXLENGTH];
+    	int index;
+}symbolTable;
+
+struct symbol_scope_begin {
+    	//当前作用域的符号在符号表的起始位置序号,这是一个栈结构,当使用顺序表作为符号表时，进入、退出一个作用域时需要对其操作，以完成符号表的管理。对其它形式的符号表，不一定需要此数据结构
+    	int TX[30];
+    	int top;
+} symbol_scope_TX;
+
+
+struct node *mknode(int kind,struct node *first,struct node *second, struct node *third,int pos);
+void semantic_Analysis0(struct ASTNode *T);
+void semantic_Analysis(struct ASTNode *T);
+void boolExp(struct ASTNode *T);
+void Exp(struct ASTNode *T);
+void objectCode(struct codenode *head);
+
 
 

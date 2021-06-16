@@ -1495,7 +1495,7 @@ yyreduce:
 
   case 3:
 #line 58 "parser.y" /* yacc.c:1646  */
-    { display((yyvsp[-1].ptr),0); }
+    { (yyval.ptr)=mknode(PROGRAM,(yyvsp[-1].ptr),(yyvsp[0].ptr),NULL,yylineno); display((yyvsp[-1].ptr),0); }
 #line 1500 "y.tab.c" /* yacc.c:1646  */
     break;
 

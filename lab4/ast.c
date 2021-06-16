@@ -17,7 +17,7 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 	switch (T->kind) {
 	case PROGRAM:
 			if(T == NULL){
-				printf("NOthing In this Program.");				
+				printf("Nothing In this Program.");				
 				break;			
 			}
 			if(T->ptr[1] == NULL){
