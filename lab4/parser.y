@@ -44,6 +44,8 @@ void display(struct node *,int);
 %token <type_id> T_And
 %token <type_id> T_Or
 
+%token GOTO LABEL FUNCTION ARG
+
 %left '='
 %left T_Or
 %left T_And
@@ -55,13 +57,13 @@ void display(struct node *,int);
 
 %%
 Program: /*empty*/		{ $$=NULL; }
-       | FuncDecl Program       { $$=mknode(PROGRAM,$1,$2,NULL,yylineno); display($1,0); }
+       | FuncDecl Program       { $$=mknode(PROGRAM,$1,$2,NULL,yylineno); display($1,0); semantic_Analysis0($1); }
        ;
 
 FuncDecl: FuncRet FuncSign FuncBlock { $$=mknode(FUNCDECL,$1,$2,$3,yylineno); }
         ;
 
-FuncSign: FuncName '(' Args ')'                   { $$=mknode(FUNCSIGN,$1,$3,NULL,yylineno); strcpy($$->type_id,$1); }
+FuncSign: FuncName '(' Args ')'                   { $$=mknode(FUNCSIGN,$1,$3,NULL,yylineno); }
         ;
 
 FuncBlock : '{' VarDecls Stmts '}'                  { $$=mknode(FUNCBLOCK,$2,$3,NULL,yylineno); }
@@ -160,7 +162,7 @@ Actuals   : Exp             { $$=$1; }
           ;
 
 IfStmt:    IfTest Then StmtsBlock EndThen EndIf                  { $$=mknode(IFSTMT,$1,$3,NULL,yylineno); }
-      |    IfTest Then StmtsBlock EndThen Else StmtsBlock EndIf  { $$=mknode(IFSTMT,$1,$3,$6,yylineno); }
+      |    IfTest Then StmtsBlock EndThen Else StmtsBlock EndIf  { $$=mknode(IFELSESTMT,$1,$3,$6,yylineno); }
       ;
 
 IfTest : If TestExpr                { $$=mknode(IFTEST,$2,NULL,NULL,yylineno); }

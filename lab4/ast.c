@@ -99,15 +99,17 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 			break;
 	case IFSTMT:
                         printf("%*cIF STATEMENT：\n", indent, ' ');
-			if(T->ptr[2] == NULL){
-				display(T->ptr[0],indent+3);
-				display(T->ptr[1],indent+3);
-			}else{
-				display(T->ptr[0],indent+3);
-				display(T->ptr[1],indent+3);
-				display(T->ptr[2],indent+3);
-			}
+			display(T->ptr[0],indent+3);
+			display(T->ptr[1],indent+3);
+			display(T->ptr[0],indent+3);
+			display(T->ptr[1],indent+3);
+			display(T->ptr[2],indent+3);
 			break;
+	case IFELSESTMT:
+			printf("%*cIF ELSE STATEMENT：\n", indent, ' ');
+			display(T->ptr[0],indent+3);
+			display(T->ptr[1],indent+3);
+			display(T->ptr[2],indent+3);
 	case IFTEST:
 			printf("%*cIF条件：\n", indent, ' ');
 			display(T->ptr[0],indent+3);

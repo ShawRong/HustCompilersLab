@@ -1,6 +1,6 @@
 CC = gcc
 OUT = parser
-OBJ = lex.yy.c y.tab.c ast.c
+OBJ = lex.yy.c y.tab.c ast.c Semantic.c
 SCANNER = scanner.l
 PARSER = parser.y
 

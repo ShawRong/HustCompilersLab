@@ -1,3 +1,11 @@
+Terminals unused in grammar
+
+   GOTO
+   LABEL
+   FUNCTION
+   ARG
+
+
 语法
 
     0 $accept: Program $end
@@ -174,107 +182,111 @@ T_Eq (273) 79
 T_Ne (274) 80
 T_And (275) 82
 T_Or (276) 81
+GOTO (277)
+LABEL (278)
+FUNCTION (279)
+ARG (280)
 
 
 Nonterminals, with rules where they appear
 
-$accept (37)
+$accept (41)
     左： 0
-Program (38)
+Program (42)
     左： 1 2, 右： 0 2
-FuncDecl (39)
+FuncDecl (43)
     左： 3, 右： 2
-FuncSign (40)
+FuncSign (44)
     左： 4, 右： 3
-FuncBlock (41)
+FuncBlock (45)
     左： 5, 右： 3
-FuncRet (42)
+FuncRet (46)
     左： 6, 右： 3
-RetType (43)
+RetType (47)
     左： 7 8, 右： 6
-FuncName (44)
+FuncName (48)
     左： 9, 右： 4
-Args (45)
+Args (49)
     左： 10 11, 右： 4
-_Args (46)
+_Args (50)
     左： 12 13, 右： 11 13
-Arg (47)
+Arg (51)
     左： 14, 右： 12 13
-VarDecls (48)
+VarDecls (52)
     左： 15 16, 右： 5 16
-VarDecl (49)
+VarDecl (53)
     左： 17, 右： 16
-Specifier (50)
+Specifier (54)
     左： 18, 右： 14 17
-DecList (51)
+DecList (55)
     左： 19 20, 右： 17 20
-ID (52)
+ID (56)
     左： 21, 右： 9 14 19 20 44 45
-Stmts (53)
+Stmts (57)
     左： 22 23, 右： 5 23 52
-Stmt (54)
+Stmt (58)
     左： 24 25 26 27 28 29 30 31, 右： 22 23
-AssignStmt (55)
+AssignStmt (59)
     左： 32, 右： 24
-T_Identifier_NonT (56)
+T_Identifier_NonT (60)
     左： 33, 右： 32
-PrintStmt (57)
+PrintStmt (61)
     左： 34, 右： 25
-String (58)
+String (62)
     左： 35, 右： 34 85
-PActuals (59)
+PActuals (63)
     左： 36 37, 右： 34
-ExpList (60)
+ExpList (64)
     左： 38 39, 右： 37 39
-ReturnStmt (61)
+ReturnStmt (65)
     左： 40 41, 右： 27
-Ret (62)
+Ret (66)
     左： 42, 右： 40 41
-CallStmt (63)
+CallStmt (67)
     左： 43, 右： 26
-CallExpr (64)
+CallExpr (68)
     左： 44 45, 右： 43 73
-Actuals (65)
+Actuals (69)
     左： 46 47, 右： 44 47
-IfStmt (66)
+IfStmt (70)
     左： 48 49, 右： 28
-IfTest (67)
+IfTest (71)
     左： 50, 右： 48 49
-TestExpr (68)
+TestExpr (72)
     左： 51, 右： 50 59
-StmtsBlock (69)
+StmtsBlock (73)
     左： 52, 右： 48 49 58
-If (70)
+If (74)
     左： 53, 右： 50
-Then (71)
+Then (75)
     左： 54, 右： 48 49
-EndThen (72)
+EndThen (76)
     左： 55, 右： 48 49
-Else (73)
+Else (77)
     左： 56, 右： 49
-EndIf (74)
+EndIf (78)
     左： 57, 右： 48 49
-WhileStmt (75)
+WhileStmt (79)
     左： 58, 右： 29
-WhileTest (76)
+WhileTest (80)
     左： 59, 右： 58
-While (77)
+While (81)
     左： 60, 右： 59
-Do (78)
+Do (82)
     左： 61, 右： 58
-EndWhile (79)
+EndWhile (83)
     左： 62, 右： 58
-BreakStmt (80)
+BreakStmt (84)
     左： 63, 右： 30
-ContinueStmt (81)
+ContinueStmt (85)
     左： 64, 右： 31
-Exp (82)
+Exp (86)
     左： 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83
     84, 右： 32 38 39 40 46 47 51 65 66 67 68 69 72 74 75 76 77 78
     79 80 81 82 83
-ReadInt (83)
+ReadInt (87)
     左： 85, 右： 84
-ReadInt_NotT (84)
+ReadInt_NotT (88)
     左： 86, 右： 85
 
 

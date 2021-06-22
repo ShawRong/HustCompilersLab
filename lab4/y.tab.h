@@ -63,7 +63,11 @@ extern int yydebug;
     T_Eq = 273,
     T_Ne = 274,
     T_And = 275,
-    T_Or = 276
+    T_Or = 276,
+    GOTO = 277,
+    LABEL = 278,
+    FUNCTION = 279,
+    ARG = 280
   };
 #endif
 /* Tokens.  */
@@ -86,6 +90,10 @@ extern int yydebug;
 #define T_Ne 274
 #define T_And 275
 #define T_Or 276
+#define GOTO 277
+#define LABEL 278
+#define FUNCTION 279
+#define ARG 280
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -99,7 +107,7 @@ union YYSTYPE
         char*   type_string;
 	struct node *ptr;
 
-#line 103 "y.tab.h" /* yacc.c:1909  */
+#line 111 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
