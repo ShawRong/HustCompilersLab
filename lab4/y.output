@@ -1,13 +1,13 @@
 Terminals unused in grammar
 
-   GOTO
-   LABEL
-   FUNCTION
-   ARG
-   PARAM
+    GOTO
+    LABEL
+    FUNCTION
+    ARG
+    PARAM
 
 
-语法
+Grammar
 
     0 $accept: Program $end
 
@@ -145,147 +145,191 @@ Terminals unused in grammar
 
 Terminals, with rules where they appear
 
-$end (0) 0
-'!' (33) 81
-'%' (37) 72
-'(' (40) 5 33 42 43 49 70 84
-')' (41) 5 33 42 43 49 70 84
-'*' (42) 65
-'+' (43) 63
-',' (44) 11 19 37 38 45
-'-' (45) 64 67
-'/' (47) 66
-';' (59) 15 30 33 39 40 61 62
-'<' (60) 74
-'=' (61) 31
-'>' (62) 73
-'{' (123) 6 50
-'}' (125) 6 50
-error (256)
-T_IntConstant (258) 68
-T_Identifier (259) 20 32 69
-T_Int (260) 8 17
-T_StringConstant (261) 34
-T_Print (262) 33
-T_ReadInt (263) 85
-T_Return (264) 41
-T_Void (265) 9
-T_While (266) 58
-T_If (267) 51
-T_Else (268) 54
-T_Break (269) 61
-T_Continue (270) 62
-T_Le (271) 76
-T_Ge (272) 75
-T_Eq (273) 77
-T_Ne (274) 78
-T_And (275) 80
-T_Or (276) 79
-GOTO (277)
-LABEL (278)
-FUNCTION (279)
-ARG (280)
-PARAM (281)
+    $end (0) 0
+    '!' (33) 81
+    '%' (37) 72
+    '(' (40) 5 33 42 43 49 70 84
+    ')' (41) 5 33 42 43 49 70 84
+    '*' (42) 65
+    '+' (43) 63
+    ',' (44) 11 19 37 38 45
+    '-' (45) 64 67
+    '/' (47) 66
+    ';' (59) 15 30 33 39 40 61 62
+    '<' (60) 74
+    '=' (61) 31
+    '>' (62) 73
+    '{' (123) 6 50
+    '}' (125) 6 50
+    error (256)
+    T_IntConstant <type_int> (258) 68
+    T_Identifier <type_id> (259) 20 32 69
+    T_Int <type_id> (260) 8 17
+    T_StringConstant <type_string> (261) 34
+    T_Print <type_id> (262) 33
+    T_ReadInt <type_id> (263) 85
+    T_Return <type_id> (264) 41
+    T_Void <type_id> (265) 9
+    T_While <type_id> (266) 58
+    T_If <type_id> (267) 51
+    T_Else <type_id> (268) 54
+    T_Break <type_id> (269) 61
+    T_Continue <type_id> (270) 62
+    T_Le <type_id> (271) 76
+    T_Ge <type_id> (272) 75
+    T_Eq <type_id> (273) 77
+    T_Ne <type_id> (274) 78
+    T_And <type_id> (275) 80
+    T_Or <type_id> (276) 79
+    GOTO (277)
+    LABEL (278)
+    FUNCTION (279)
+    ARG (280)
+    PARAM (281)
 
 
 Nonterminals, with rules where they appear
 
-$accept (42)
-    左： 0
-Program (43)
-    左： 1, 右： 0
-FuncDeclList (44)
-    左： 2 3, 右： 1 3
-FuncDecl (45)
-    左： 4, 右： 3
-FuncSign (46)
-    左： 5, 右： 4
-FuncBlock (47)
-    左： 6, 右： 4
-FuncRet (48)
-    左： 7, 右： 4
-RetType (49)
-    左： 8 9, 右： 7
-Args (50)
-    左： 10 11 12, 右： 5 11
-Arg (51)
-    左： 13, 右： 10 11
-VarDecls (52)
-    左： 14 15, 右： 6 15
-VarDecl (53)
-    左： 16, 右： 15
-Specifier (54)
-    左： 17, 右： 13 16
-DecList (55)
-    左： 18 19, 右： 16 19
-ID (56)
-    左： 20, 右： 5 13 18 19 42 43
-Stmts (57)
-    左： 21 22, 右： 6 22 50
-Stmt (58)
-    左： 23 24 25 26 27 28 29, 右： 21 22
-ExpStmt (59)
-    左： 30, 右： 29
-AssignExp (60)
-    左： 31, 右： 83
-T_Identifier_NonT (61)
-    左： 32, 右： 31
-PrintStmt (62)
-    左： 33, 右： 23
-String (63)
-    左： 34, 右： 33 84
-PActuals (64)
-    左： 35 36, 右： 33
-ExpList (65)
-    左： 37 38, 右： 36 38
-ReturnStmt (66)
-    左： 39 40, 右： 24
-Ret (67)
-    左： 41, 右： 39 40
-CallExpr (68)
-    左： 42 43, 右： 71
-Actuals (69)
-    左： 44 45, 右： 42 45
-IfStmt (70)
-    左： 46 47, 右： 25
-IfTest (71)
-    左： 48, 右： 46 47
-TestExpr (72)
-    左： 49, 右： 48 57
-StmtsBlock (73)
-    左： 50, 右： 46 47 56
-If (74)
-    左： 51, 右： 48
-Then (75)
-    左： 52, 右： 46 47
-EndThen (76)
-    左： 53, 右： 46 47
-Else (77)
-    左： 54, 右： 47
-EndIf (78)
-    左： 55, 右： 46 47
-WhileStmt (79)
-    左： 56, 右： 26
-WhileTest (80)
-    左： 57, 右： 56
-While (81)
-    左： 58, 右： 57
-Do (82)
-    左： 59, 右： 56
-EndWhile (83)
-    左： 60, 右： 56
-BreakStmt (84)
-    左： 61, 右： 27
-ContinueStmt (85)
-    左： 62, 右： 28
-Exp (86)
-    左： 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81
-    82 83, 右： 30 31 37 38 39 44 45 49 63 64 65 66 67 70 72 73 74
-    75 76 77 78 79 80 81
-ReadInt (87)
-    左： 84, 右： 82
-ReadInt_NotT (88)
-    左： 85, 右： 84
+    $accept (42)
+        on left: 0
+    Program <ptr> (43)
+        on left: 1
+        on right: 0
+    FuncDeclList <ptr> (44)
+        on left: 2 3
+        on right: 1 3
+    FuncDecl <ptr> (45)
+        on left: 4
+        on right: 3
+    FuncSign <ptr> (46)
+        on left: 5
+        on right: 4
+    FuncBlock <ptr> (47)
+        on left: 6
+        on right: 4
+    FuncRet <ptr> (48)
+        on left: 7
+        on right: 4
+    RetType <ptr> (49)
+        on left: 8 9
+        on right: 7
+    Args <ptr> (50)
+        on left: 10 11 12
+        on right: 5 11
+    Arg <ptr> (51)
+        on left: 13
+        on right: 10 11
+    VarDecls <ptr> (52)
+        on left: 14 15
+        on right: 6 15
+    VarDecl <ptr> (53)
+        on left: 16
+        on right: 15
+    Specifier <ptr> (54)
+        on left: 17
+        on right: 13 16
+    DecList <ptr> (55)
+        on left: 18 19
+        on right: 16 19
+    ID <ptr> (56)
+        on left: 20
+        on right: 5 13 18 19 42 43
+    Stmts <ptr> (57)
+        on left: 21 22
+        on right: 6 22 50
+    Stmt <ptr> (58)
+        on left: 23 24 25 26 27 28 29
+        on right: 21 22
+    ExpStmt <ptr> (59)
+        on left: 30
+        on right: 29
+    AssignExp <ptr> (60)
+        on left: 31
+        on right: 83
+    T_Identifier_NonT <ptr> (61)
+        on left: 32
+        on right: 31
+    PrintStmt <ptr> (62)
+        on left: 33
+        on right: 23
+    String <ptr> (63)
+        on left: 34
+        on right: 33 84
+    PActuals <ptr> (64)
+        on left: 35 36
+        on right: 33
+    ExpList <ptr> (65)
+        on left: 37 38
+        on right: 36 38
+    ReturnStmt <ptr> (66)
+        on left: 39 40
+        on right: 24
+    Ret <ptr> (67)
+        on left: 41
+        on right: 39 40
+    CallExpr <ptr> (68)
+        on left: 42 43
+        on right: 71
+    Actuals <ptr> (69)
+        on left: 44 45
+        on right: 42 45
+    IfStmt <ptr> (70)
+        on left: 46 47
+        on right: 25
+    IfTest <ptr> (71)
+        on left: 48
+        on right: 46 47
+    TestExpr <ptr> (72)
+        on left: 49
+        on right: 48 57
+    StmtsBlock <ptr> (73)
+        on left: 50
+        on right: 46 47 56
+    If (74)
+        on left: 51
+        on right: 48
+    Then (75)
+        on left: 52
+        on right: 46 47
+    EndThen (76)
+        on left: 53
+        on right: 46 47
+    Else (77)
+        on left: 54
+        on right: 47
+    EndIf (78)
+        on left: 55
+        on right: 46 47
+    WhileStmt <ptr> (79)
+        on left: 56
+        on right: 26
+    WhileTest <ptr> (80)
+        on left: 57
+        on right: 56
+    While (81)
+        on left: 58
+        on right: 57
+    Do (82)
+        on left: 59
+        on right: 56
+    EndWhile (83)
+        on left: 60
+        on right: 56
+    BreakStmt <ptr> (84)
+        on left: 61
+        on right: 27
+    ContinueStmt <ptr> (85)
+        on left: 62
+        on right: 28
+    Exp <ptr> (86)
+        on left: 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83
+        on right: 30 31 37 38 39 44 45 49 63 64 65 66 67 70 72 73 74 75 76 77 78 79 80 81
+    ReadInt <ptr> (87)
+        on left: 84
+        on right: 82
+    ReadInt_NotT <ptr> (88)
+        on left: 85
+        on right: 84
 
 
 State 0
@@ -297,11 +341,11 @@ State 0
 
     $default  reduce using rule 2 (FuncDeclList)
 
-    Program       转到状态 3
-    FuncDeclList  转到状态 4
-    FuncDecl      转到状态 5
-    FuncRet       转到状态 6
-    RetType       转到状态 7
+    Program       go to state 3
+    FuncDeclList  go to state 4
+    FuncDecl      go to state 5
+    FuncRet       go to state 6
+    RetType       go to state 7
 
 
 State 1
@@ -341,10 +385,10 @@ State 5
 
     $default  reduce using rule 2 (FuncDeclList)
 
-    FuncDeclList  转到状态 9
-    FuncDecl      转到状态 5
-    FuncRet       转到状态 6
-    RetType       转到状态 7
+    FuncDeclList  go to state 9
+    FuncDecl      go to state 5
+    FuncRet       go to state 6
+    RetType       go to state 7
 
 
 State 6
@@ -353,8 +397,8 @@ State 6
 
     T_Identifier  shift, and go to state 10
 
-    FuncSign  转到状态 11
-    ID        转到状态 12
+    FuncSign  go to state 11
+    ID        go to state 12
 
 
 State 7
@@ -368,7 +412,7 @@ State 8
 
     0 $accept: Program $end .
 
-    $default  接受
+    $default  accept
 
 
 State 9
@@ -391,7 +435,7 @@ State 11
 
     '{'  shift, and go to state 13
 
-    FuncBlock  转到状态 14
+    FuncBlock  go to state 14
 
 
 State 12
@@ -409,9 +453,9 @@ State 13
 
     $default  reduce using rule 14 (VarDecls)
 
-    VarDecls   转到状态 17
-    VarDecl    转到状态 18
-    Specifier  转到状态 19
+    VarDecls   go to state 17
+    VarDecl    go to state 18
+    Specifier  go to state 19
 
 
 State 14
@@ -429,9 +473,9 @@ State 15
 
     $default  reduce using rule 12 (Args)
 
-    Args       转到状态 20
-    Arg        转到状态 21
-    Specifier  转到状态 22
+    Args       go to state 20
+    Arg        go to state 21
+    Specifier  go to state 22
 
 
 State 16
@@ -458,27 +502,27 @@ State 17
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    Stmts              转到状态 36
-    Stmt               转到状态 37
-    ExpStmt            转到状态 38
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    PrintStmt          转到状态 41
-    ReturnStmt         转到状态 42
-    Ret                转到状态 43
-    CallExpr           转到状态 44
-    IfStmt             转到状态 45
-    IfTest             转到状态 46
-    If                 转到状态 47
-    WhileStmt          转到状态 48
-    WhileTest          转到状态 49
-    While              转到状态 50
-    BreakStmt          转到状态 51
-    ContinueStmt       转到状态 52
-    Exp                转到状态 53
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    Stmts              go to state 36
+    Stmt               go to state 37
+    ExpStmt            go to state 38
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    PrintStmt          go to state 41
+    ReturnStmt         go to state 42
+    Ret                go to state 43
+    CallExpr           go to state 44
+    IfStmt             go to state 45
+    IfTest             go to state 46
+    If                 go to state 47
+    WhileStmt          go to state 48
+    WhileTest          go to state 49
+    While              go to state 50
+    BreakStmt          go to state 51
+    ContinueStmt       go to state 52
+    Exp                go to state 53
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 18
@@ -494,8 +538,8 @@ State 19
 
     T_Identifier  shift, and go to state 10
 
-    DecList  转到状态 57
-    ID       转到状态 58
+    DecList  go to state 57
+    ID       go to state 58
 
 
 State 20
@@ -521,7 +565,7 @@ State 22
 
     T_Identifier  shift, and go to state 10
 
-    ID  转到状态 61
+    ID  go to state 61
 
 
 State 23
@@ -602,13 +646,13 @@ State 32
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 65
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 65
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 33
@@ -622,13 +666,13 @@ State 33
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 66
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 66
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 34
@@ -642,13 +686,13 @@ State 34
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 67
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 67
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 35
@@ -686,27 +730,27 @@ State 37
 
     $default  reduce using rule 21 (Stmts)
 
-    ID                 转到状态 35
-    Stmts              转到状态 70
-    Stmt               转到状态 37
-    ExpStmt            转到状态 38
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    PrintStmt          转到状态 41
-    ReturnStmt         转到状态 42
-    Ret                转到状态 43
-    CallExpr           转到状态 44
-    IfStmt             转到状态 45
-    IfTest             转到状态 46
-    If                 转到状态 47
-    WhileStmt          转到状态 48
-    WhileTest          转到状态 49
-    While              转到状态 50
-    BreakStmt          转到状态 51
-    ContinueStmt       转到状态 52
-    Exp                转到状态 53
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    Stmts              go to state 70
+    Stmt               go to state 37
+    ExpStmt            go to state 38
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    PrintStmt          go to state 41
+    ReturnStmt         go to state 42
+    Ret                go to state 43
+    CallExpr           go to state 44
+    IfStmt             go to state 45
+    IfTest             go to state 46
+    If                 go to state 47
+    WhileStmt          go to state 48
+    WhileTest          go to state 49
+    While              go to state 50
+    BreakStmt          go to state 51
+    ContinueStmt       go to state 52
+    Exp                go to state 53
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 38
@@ -757,13 +801,13 @@ State 43
     '('            shift, and go to state 34
     ';'            shift, and go to state 72
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 73
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 73
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 44
@@ -787,7 +831,7 @@ State 46
 
     $default  reduce using rule 52 (Then)
 
-    Then  转到状态 74
+    Then  go to state 74
 
 
 State 47
@@ -796,7 +840,7 @@ State 47
 
     '('  shift, and go to state 75
 
-    TestExpr  转到状态 76
+    TestExpr  go to state 76
 
 
 State 48
@@ -812,7 +856,7 @@ State 49
 
     $default  reduce using rule 59 (Do)
 
-    Do  转到状态 77
+    Do  go to state 77
 
 
 State 50
@@ -821,7 +865,7 @@ State 50
 
     '('  shift, and go to state 75
 
-    TestExpr  转到状态 78
+    TestExpr  go to state 78
 
 
 State 51
@@ -893,9 +937,9 @@ State 56
 
     $default  reduce using rule 14 (VarDecls)
 
-    VarDecls   转到状态 94
-    VarDecl    转到状态 18
-    Specifier  转到状态 19
+    VarDecls   go to state 94
+    VarDecl    go to state 18
+    Specifier  go to state 19
 
 
 State 57
@@ -930,9 +974,9 @@ State 60
 
     $default  reduce using rule 12 (Args)
 
-    Args       转到状态 96
-    Arg        转到状态 21
-    Specifier  转到状态 22
+    Args       go to state 96
+    Arg        go to state 21
+    Specifier  go to state 22
 
 
 State 61
@@ -948,7 +992,7 @@ State 62
 
     T_StringConstant  shift, and go to state 97
 
-    String  转到状态 98
+    String  go to state 98
 
 
 State 63
@@ -1051,14 +1095,14 @@ State 68
     '('            shift, and go to state 34
     ')'            shift, and go to state 100
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Actuals            转到状态 101
-    Exp                转到状态 102
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Actuals            go to state 101
+    Exp                go to state 102
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 69
@@ -1086,13 +1130,13 @@ State 71
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 103
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 103
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 72
@@ -1142,7 +1186,7 @@ State 74
 
     '{'  shift, and go to state 105
 
-    StmtsBlock  转到状态 106
+    StmtsBlock  go to state 106
 
 
 State 75
@@ -1156,13 +1200,13 @@ State 75
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 107
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 107
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 76
@@ -1178,7 +1222,7 @@ State 77
 
     '{'  shift, and go to state 105
 
-    StmtsBlock  转到状态 108
+    StmtsBlock  go to state 108
 
 
 State 78
@@ -1199,13 +1243,13 @@ State 79
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 109
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 109
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 80
@@ -1219,13 +1263,13 @@ State 80
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 110
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 110
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 81
@@ -1239,13 +1283,13 @@ State 81
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 111
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 111
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 82
@@ -1259,13 +1303,13 @@ State 82
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 112
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 112
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 83
@@ -1279,13 +1323,13 @@ State 83
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 113
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 113
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 84
@@ -1299,13 +1343,13 @@ State 84
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 114
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 114
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 85
@@ -1319,13 +1363,13 @@ State 85
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 115
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 115
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 86
@@ -1339,13 +1383,13 @@ State 86
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 116
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 116
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 87
@@ -1359,13 +1403,13 @@ State 87
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 117
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 117
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 88
@@ -1379,13 +1423,13 @@ State 88
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 118
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 118
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 89
@@ -1399,13 +1443,13 @@ State 89
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 119
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 119
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 90
@@ -1419,13 +1463,13 @@ State 90
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 120
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 120
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 91
@@ -1439,13 +1483,13 @@ State 91
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 121
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 121
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 92
@@ -1461,7 +1505,7 @@ State 93
 
     T_StringConstant  shift, and go to state 97
 
-    String  转到状态 122
+    String  go to state 122
 
 
 State 94
@@ -1477,8 +1521,8 @@ State 95
 
     T_Identifier  shift, and go to state 10
 
-    DecList  转到状态 123
-    ID       转到状态 58
+    DecList  go to state 123
+    ID       go to state 58
 
 
 State 96
@@ -1503,8 +1547,8 @@ State 98
 
     $default  reduce using rule 35 (PActuals)
 
-    PActuals  转到状态 125
-    ExpList   转到状态 126
+    PActuals  go to state 125
+    ExpList   go to state 126
 
 
 State 99
@@ -1622,27 +1666,27 @@ State 105
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    Stmts              转到状态 129
-    Stmt               转到状态 37
-    ExpStmt            转到状态 38
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    PrintStmt          转到状态 41
-    ReturnStmt         转到状态 42
-    Ret                转到状态 43
-    CallExpr           转到状态 44
-    IfStmt             转到状态 45
-    IfTest             转到状态 46
-    If                 转到状态 47
-    WhileStmt          转到状态 48
-    WhileTest          转到状态 49
-    While              转到状态 50
-    BreakStmt          转到状态 51
-    ContinueStmt       转到状态 52
-    Exp                转到状态 53
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    Stmts              go to state 129
+    Stmt               go to state 37
+    ExpStmt            go to state 38
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    PrintStmt          go to state 41
+    ReturnStmt         go to state 42
+    Ret                go to state 43
+    CallExpr           go to state 44
+    IfStmt             go to state 45
+    IfTest             go to state 46
+    If                 go to state 47
+    WhileStmt          go to state 48
+    WhileTest          go to state 49
+    While              go to state 50
+    BreakStmt          go to state 51
+    ContinueStmt       go to state 52
+    Exp                go to state 53
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 106
@@ -1652,7 +1696,7 @@ State 106
 
     $default  reduce using rule 53 (EndThen)
 
-    EndThen  转到状态 130
+    EndThen  go to state 130
 
 
 State 107
@@ -1694,7 +1738,7 @@ State 108
 
     $default  reduce using rule 60 (EndWhile)
 
-    EndWhile  转到状态 132
+    EndWhile  go to state 132
 
 
 State 109
@@ -2060,13 +2104,13 @@ State 124
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Exp                转到状态 134
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Exp                go to state 134
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 125
@@ -2101,14 +2145,14 @@ State 128
     '!'            shift, and go to state 33
     '('            shift, and go to state 34
 
-    ID                 转到状态 35
-    AssignExp          转到状态 39
-    T_Identifier_NonT  转到状态 40
-    CallExpr           转到状态 44
-    Actuals            转到状态 136
-    Exp                转到状态 102
-    ReadInt            转到状态 54
-    ReadInt_NotT       转到状态 55
+    ID                 go to state 35
+    AssignExp          go to state 39
+    T_Identifier_NonT  go to state 40
+    CallExpr           go to state 44
+    Actuals            go to state 136
+    Exp                go to state 102
+    ReadInt            go to state 54
+    ReadInt_NotT       go to state 55
 
 
 State 129
@@ -2127,8 +2171,8 @@ State 130
 
     $default  reduce using rule 55 (EndIf)
 
-    Else   转到状态 139
-    EndIf  转到状态 140
+    Else   go to state 139
+    EndIf  go to state 140
 
 
 State 131
@@ -2187,7 +2231,7 @@ State 134
 
     $default  reduce using rule 37 (ExpList)
 
-    ExpList  转到状态 141
+    ExpList  go to state 141
 
 
 State 135
@@ -2224,7 +2268,7 @@ State 139
 
     '{'  shift, and go to state 105
 
-    StmtsBlock  转到状态 143
+    StmtsBlock  go to state 143
 
 
 State 140
@@ -2254,7 +2298,7 @@ State 143
 
     $default  reduce using rule 55 (EndIf)
 
-    EndIf  转到状态 144
+    EndIf  go to state 144
 
 
 State 144

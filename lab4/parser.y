@@ -97,7 +97,7 @@ VarDecl: Specifier DecList 	       { $$=mknode(VARDECL,$1,$2,NULL,yylineno); }
 Specifier: T_Int		       { $$ = mknode(T_Int,NULL,NULL,NULL,yylineno); strcpy($$->type_id,"Int"); }
          ;
 
-DecList: ID                  { $$=$1; }
+DecList: ID                  { $$=mknode(',',$1,NULL,NULL,yylineno); strcpy($$->type_id,","); }
        | ID ',' DecList      { $$=mknode(',',$1,$3,NULL,yylineno); strcpy($$->type_id,","); }
        ;
 

@@ -451,7 +451,7 @@ void semantic_Analysis(node *T)
             result.offset=T->offset;
             T->code=genIR(PARAM,opn1,opn2,result);     //生成：FUNCTION 函数名
             break;
-	case STMTSBLOCK:
+	case FUNCBLOCK:
             LEV++;
             //设置层号加1，并且保存该层局部变量在符号表中的起始位置在symbol_scope_TX
             symbol_scope_TX.TX[symbol_scope_TX.top++]=symbolTable.index;
@@ -625,7 +625,6 @@ void semantic_Analysis0(node *T) {
     symbolTable.symbols[0].paramnum=1;//read的形参个数
     fillSymbolTable("print","",0,'F',4);
     symbolTable.symbols[1].paramnum=2;
-    fillSymbolTable("x","",1,'P',12);
 #if (DEBUG)               
 	prn_symbol(); 
 #endif

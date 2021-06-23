@@ -13,7 +13,7 @@ clean:
 	rm -f *.o lex.yy.c y.tab.c y.tab.h y.output $(OUT)
 
 $(OUT): $(OBJ)
-	$(CC) -g $(OUT) $(OBJ)
+	$(CC) -g $(OBJ) -o $(OUT)
 
 lex.yy.c: $(SCANNER)
 	flex $<
