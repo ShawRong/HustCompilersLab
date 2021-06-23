@@ -67,7 +67,8 @@ extern int yydebug;
     GOTO = 277,
     LABEL = 278,
     FUNCTION = 279,
-    ARG = 280
+    ARG = 280,
+    PARAM = 281
   };
 #endif
 /* Tokens.  */
@@ -94,6 +95,7 @@ extern int yydebug;
 #define LABEL 278
 #define FUNCTION 279
 #define ARG 280
+#define PARAM 281
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -107,7 +109,7 @@ union YYSTYPE
         char*   type_string;
 	struct node *ptr;
 
-#line 111 "y.tab.h" /* yacc.c:1909  */
+#line 113 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

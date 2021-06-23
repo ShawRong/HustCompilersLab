@@ -19,7 +19,7 @@ void display(struct node *,int);
 	struct node *ptr;
 };
 
-%type <ptr> Stmts Stmt Exp T_Identifier_NonT VarDecls VarDecl Specifier DecList ID AssignStmt PrintStmt ReturnStmt CallStmt CallExpr String Actuals PActuals ExpList Program FuncDecl FuncSign FuncBlock RetType FuncName Args _Args Arg Ret FuncRet IfStmt IfTest TestExpr StmtsBlock WhileStmt WhileTest BreakStmt ContinueStmt ReadInt ReadInt_NotT
+%type <ptr> Stmts Stmt Exp T_Identifier_NonT VarDecls VarDecl Specifier DecList ID AssignExp PrintStmt ReturnStmt CallExpr String Actuals PActuals ExpList Program FuncDecl FuncSign FuncBlock RetType Args Arg Ret FuncRet IfStmt IfTest TestExpr StmtsBlock WhileStmt WhileTest BreakStmt ContinueStmt ReadInt ReadInt_NotT ExpStmt FuncDeclList
 
 
 %start Program
@@ -44,7 +44,7 @@ void display(struct node *,int);
 %token <type_id> T_And
 %token <type_id> T_Or
 
-%token GOTO LABEL FUNCTION ARG
+%token GOTO LABEL FUNCTION ARG PARAM
 
 %left '='
 %left T_Or
@@ -56,14 +56,17 @@ void display(struct node *,int);
 %right '!'
 
 %%
-Program: /*empty*/		{ $$=NULL; }
-       | FuncDecl Program       { $$=mknode(PROGRAM,$1,$2,NULL,yylineno); display($1,0); semantic_Analysis0($1); }
+Program: FuncDeclList           { display($1,0); semantic_Analysis0($1); }
+       ;
+
+FuncDeclList: /*empty*/		{ $$=NULL; }
+       | FuncDecl FuncDeclList       { $$=mknode(FUNCLIST,$1,$2,NULL,yylineno); }
        ;
 
 FuncDecl: FuncRet FuncSign FuncBlock { $$=mknode(FUNCDECL,$1,$2,$3,yylineno); }
         ;
 
-FuncSign: FuncName '(' Args ')'                   { $$=mknode(FUNCSIGN,$1,$3,NULL,yylineno); }
+FuncSign: ID '(' Args ')'                   { $$=mknode(FUNCSIGN,$3,NULL,NULL,yylineno); strcpy($$->type_id,$1->type_id); }
         ;
 
 FuncBlock : '{' VarDecls Stmts '}'                  { $$=mknode(FUNCBLOCK,$2,$3,NULL,yylineno); }
@@ -76,22 +79,16 @@ RetType : T_Int          { $$=mknode(T_Int,NULL,NULL,NULL,yylineno); strcpy($$->
 	| T_Void         { $$=mknode(T_Void,NULL,NULL,NULL,yylineno); strcpy($$->type_id,"Void"); }
         ;
 
-FuncName : ID  { $$=$1; }
-         ;
-
-Args: /*empty*/          { $$=NULL; }
-    | _Args              { $$=mknode(ARGUMENTS,$1,NULL,NULL,yylineno); }
-    ;
-
-_Args: Arg               { $$=$1; }
-     | Arg ',' _Args     { $$=mknode(',',$1,$3,NULL,yylineno); }
+Args : Arg               { $$=mknode(ARGUMENTS,$1,NULL,NULL,yylineno); }
+     | Arg ',' Args      { $$=mknode(ARGUMENTS,$1,$3,NULL,yylineno); }
+     | /*empty*/         { $$=NULL; }
      ;
 
 Arg  : Specifier ID { $$=mknode(ARGUMENT,$1,$2,NULL,yylineno); }
      ;
 
 VarDecls : /*empty*/             { $$=NULL; }
-         | VarDecl ';' VarDecls  { $$=mknode(';',$1,$3,NULL,yylineno); }
+         | VarDecl ';' VarDecls  { $$=mknode(';',$1,$3,NULL,yylineno); strcpy($$->type_id,";"); }
          ; 
 
 VarDecl: Specifier DecList 	       { $$=mknode(VARDECL,$1,$2,NULL,yylineno); }
@@ -113,17 +110,19 @@ Stmts   :   Stmt                    	{ $$=mknode(STMTS,$1,NULL,NULL,yylineno); }
     	|   Stmt Stmts                  { $$=mknode(STMTS,$1,$2,NULL,yylineno); }
     	;
 
-Stmt:   AssignStmt                         { $$=$1; }
-    |   PrintStmt                          { $$=$1; }
-    |   CallStmt		           { $$=$1; }
+Stmt:   PrintStmt                          { $$=$1; }
     |   ReturnStmt                         { $$=$1; }
     |   IfStmt                             { $$=$1; }
     |   WhileStmt                          { $$=$1; }
     |   BreakStmt                          { $$=$1; }
     |   ContinueStmt                       { $$=$1; }
+    |   ExpStmt			           { $$=$1; }
     ;
 
-AssignStmt: T_Identifier_NonT '=' Exp ';'  { $$=mknode(ASSIGN,$1,$3,NULL,yylineno); }
+ExpStmt: Exp ';'                           { $$=mknode(EXPSTMT,$1,NULL,NULL,yylineno); }
+       ;
+
+AssignExp: T_Identifier_NonT '=' Exp  { $$=mknode(ASSIGN,$1,$3,NULL,yylineno); }
       ;
 
 T_Identifier_NonT: T_Identifier        { $$=mknode(T_Identifier,NULL,NULL,NULL,yylineno); strcpy($$->type_id,$1);}
@@ -148,9 +147,6 @@ ReturnStmt: Ret Exp ';'      { $$=mknode(RETURN,$1,$2,NULL,yylineno); }
 	  ;
 
 Ret       : T_Return         { $$=mknode(T_Return,NULL,NULL,NULL,yylineno); }
-          ;
-
-CallStmt  : CallExpr ';'     { $$=$1; }
           ;
 
 CallExpr  : ID '(' Actuals ')'  { $$=mknode(CALL,$1,$3,NULL,yylineno); }
@@ -230,7 +226,8 @@ Exp   :   Exp '+' Exp                 { $$=mknode('+',$1,$3,NULL,yylineno); strc
     |   Exp T_And Exp                 { $$=mknode(T_And,$1,$3,NULL,yylineno); strcpy($$->type_id,"AND"); }
     |   '!' Exp                       { $$=mknode(NOT,$2,NULL,NULL,yylineno); strcpy($$->type_id,"NOT"); }
     |   ReadInt                       { $$=$1; }
-    ;
+    |   AssignExp                     { $$=$1; }
+    ;   
 
 ReadInt: ReadInt_NotT '(' String ')' { $$=mknode(READINT,$1,$3,NULL,yylineno); strcpy($$->type_id, "READINT"); }
        ;

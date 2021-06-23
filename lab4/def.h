@@ -1,12 +1,12 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "stdarg.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 #include "y.tab.h"
 #define MAXLENGTH   200
 #define DX 3*sizeof(int)
 
-enum node_kind  { UMINUS, ASSIGN, PRINT, VARDECL, CALL, RETURN, ARGUMENTS, ARGUMENT, FUNCDECL, FUNCSIGN, FUNCBLOCK, STMTS, PROGRAM, FUNCRET, READINT, IF, ELSE, IFTEST, IFSTMT, WHILETEST, WHILESTMT, STMTSBLOCK, NOT, IFELSESTMT};
+enum node_kind  { UMINUS, ASSIGN, PRINT, VARDECL, CALL, RETURN, ARGUMENTS, ARGUMENT, FUNCDECL, FUNCSIGN, FUNCBLOCK, STMTS, FUNCRET, READINT, IF, ELSE, IFTEST, IFSTMT, WHILETEST, WHILESTMT, STMTSBLOCK, NOT, IFELSESTMT, EXPSTMT, FUNCLIST};
 
 int LEV;
 

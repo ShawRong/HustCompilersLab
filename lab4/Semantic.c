@@ -1,10 +1,13 @@
 #include "def.h"
 #include "MyFunction.h"
 
+#define DEBUG 1
+
 char *newAlias() {
     static int no=1;
     char s[10];
     itoa(no++,s);
+    //snprintf(s, 10, "%d", no++);
     return strcat0("v",s);
 }
 
@@ -12,6 +15,7 @@ char *newLabel() {
     static int no=1;
     char s[10];
     itoa(no++,s);
+    //snprintf(s, 10, "%d", no++);
     return strcat0("label",s);
 }
 
@@ -19,6 +23,7 @@ char *newTemp(){
     static int no=1;
     char s[10];
     itoa(no++,s);
+    //snprintf(s, 10, "%d", no++);
     return strcat0("temp",s);
 }
 
@@ -148,9 +153,9 @@ void prnIR(struct codenode *head){
 
 void prn_symbol(){ //显示符号表
     int i=0;
-    printf("%6s %6s %6s %4s %6s\n","变量名","别 名","层 号","标记","偏移量");
+    printf("\t%s\t \t%s\t \t%s\t \t%s\t \t%s\t\n","变量名","别 名","层 号","标记","偏移量");
     for(i=0;i<symbolTable.index;i++)
-        printf("%6s %6s %6d %4c %6d\n",symbolTable.symbols[i].name,\
+        printf("\t%s\t \t%s\t \t%d\t \t%c\t \t%6d\t\n",symbolTable.symbols[i].name,\
                 symbolTable.symbols[i].alias,symbolTable.symbols[i].level,\
                 symbolTable.symbols[i].flag,symbolTable.symbols[i].offset);
 }
@@ -370,11 +375,24 @@ void Exp(node *T)
 void semantic_Analysis(node *T)
 {//对抽象语法树的先根遍历,按display的控制结构修改完成符号表管理和语义检查和TAC生成（语句部分）
   int rtn,num,width;
-  struct ASTNode *T0;
+  node *T0;
   struct opn opn1,opn2,result;
   if (T)
 	{
 	switch (T->kind) {
+	case FUNCLIST:
+	    if(!T->ptr[0])
+	    	break;
+	    T->ptr[0]->offset = T->offset;
+ 	    semantic_Analysis(T->ptr[0]);    //访问外部定义列表中的第一个
+            T->code=T->ptr[0]->code;
+            if (T->ptr[1]){
+                T->ptr[1]->offset=T->ptr[0]->offset+T->ptr[0]->width;
+                semantic_Analysis(T->ptr[1]); //访问该外部定义列表中的其它外部定义
+                T->code=merge(2,T->code,T->ptr[1]->code);
+                }
+            break;
+
 	case FUNCDECL:      //填写函数定义信息到符号表
             T->width=0;     //函数的宽度设置为0，不会对外部变量的地址分配产生影响
             T->offset=DX;   //设置局部变量在活动记录中的偏移量初值
@@ -397,17 +415,16 @@ void semantic_Analysis(node *T)
             result.kind=T_Identifier;   strcpy(result.id,T->type_id);
             result.offset=rtn;
             T->offset=DX;   //设置形式参数在活动记录中的偏移量初值
-            if (T->ptr[1]) { //判断是否有参数
-                T->ptr[1]->offset=T->offset;
-                semantic_Analysis(T->ptr[1]);  //处理函数参数列表
-                T->width=T->ptr[1]->width;
-                symbolTable.symbols[rtn].paramnum=T->ptr[1]->num;
-                T->code=merge(2,T->code,T->ptr[1]->code);  //连接函数名和参数代码序列
+            if (T->ptr[0]) { //判断是否有参数
+                T->ptr[0]->offset=T->offset;
+                semantic_Analysis(T->ptr[0]);  //处理函数参数列表
+                T->width=T->ptr[0]->width;
+                symbolTable.symbols[rtn].paramnum=T->ptr[0]->num;
+                T->code=merge(2,T->code,T->ptr[0]->code);  //连接函数名和参数代码序列
                 }
             else symbolTable.symbols[rtn].paramnum=0,T->width=0;
             break;
 	case ARGUMENTS:    //处理函数形式参数列表
-            T=T->ptr[0];
 	    T->ptr[0]->offset=T->offset;
             semantic_Analysis(T->ptr[0]);
             if (T->ptr[1]){
@@ -432,7 +449,7 @@ void semantic_Analysis(node *T)
             T->width=4;  //参数宽度
             result.kind=T_Identifier;   strcpy(result.id, symbolTable.symbols[rtn].alias);
             result.offset=T->offset;
-            T->code=genIR(ARGUMENT,opn1,opn2,result);     //生成：FUNCTION 函数名
+            T->code=genIR(PARAM,opn1,opn2,result);     //生成：FUNCTION 函数名
             break;
 	case STMTSBLOCK:
             LEV++;
@@ -440,16 +457,27 @@ void semantic_Analysis(node *T)
             symbol_scope_TX.TX[symbol_scope_TX.top++]=symbolTable.index;
             T->width=0;
             T->code=NULL;
-            if (T->ptr[0]){
-                T->ptr[0]->offset=T->offset+T->width;
-                strcpy(T->ptr[0]->Snext,T->Snext);  //S.next属性向下传递
-                semantic_Analysis(T->ptr[0]);       //处理复合语句的语句序列
+            if (T->ptr[0]) {
+                T->ptr[0]->offset=T->offset;
+                semantic_Analysis(T->ptr[0]);  //处理该层的局部变量DEF_LIST
                 T->width+=T->ptr[0]->width;
-                T->code=merge(2,T->code,T->ptr[0]->code);
+                T->code=T->ptr[0]->code;
                 }
+            if (T->ptr[1]){
+                T->ptr[1]->offset=T->offset+T->width;
+                strcpy(T->ptr[1]->Snext,T->Snext);  //S.next属性向下传递
+                semantic_Analysis(T->ptr[1]);       //处理复合语句的语句序列
+                T->width+=T->ptr[1]->width;
+                T->code=merge(2,T->code,T->ptr[1]->code);
+                }
+             #if (DEBUG)
+                prn_symbol();       //c在退出一个符合语句前显示的符号表
+		//system("pause");
+             #endif
              LEV--;    //出复合语句，层号减1
              symbolTable.index=symbol_scope_TX.TX[--symbol_scope_TX.top]; //删除该作用域中的符号
              break;
+
     	case ';':
             T->code=NULL;
             if (T->ptr[0]){
@@ -466,6 +494,28 @@ void semantic_Analysis(node *T)
                 }
                 break;
 	//todo	stmts
+	case VARDECL:
+	    	T->code=NULL;
+                T0=T->ptr[1]; //T0为变量名列表子树根指针，对ID、ASSIGNOP类结点在登记到符号表，作为局部变量
+                num=0;
+                T0->offset=T->offset;
+                T->width=0;
+                width=4;  //一个变量宽度
+                while (T0) {  //处理所以DEC_LIST结点
+                    num++;
+                    T0->ptr[0]->offset=T0->offset;  //类型属性向下传递
+                    if (T0->ptr[1]) T0->ptr[1]->offset=T0->offset+width;
+                    if (T0->ptr[0]->kind==T_Identifier){
+                        rtn=fillSymbolTable(T0->ptr[0]->type_id,newAlias(),LEV,'V',T->offset+T->width);//此处偏移量未计算，暂时为0
+                        if (rtn==-1)
+                            semantic_error(T0->ptr[0]->pos,T0->ptr[0]->type_id, "变量重复定义");
+                        else T0->ptr[0]->place=rtn;
+                        T->width+=width;
+                        }
+                    T0=T0->ptr[1];
+                    }
+                break;
+
 	case STMTS:
                 if (!T->ptr[0]) { T->code=NULL; T->width=0; break;}   //空语句序列
                 if (T->ptr[1]) //2条以上语句连接，生成新标号作为第一条语句结束后到达的位置
@@ -482,7 +532,7 @@ void semantic_Analysis(node *T)
 //                  T->ptr[1]->offset=T->offset+T->ptr[0]->width; //顺序结构顺序分配单元方式
                     semantic_Analysis(T->ptr[1]);
                     //序列中第1条为表达式语句，返回语句，复合语句时，第2条前不需要标号
-                    if (T->ptr[0]->kind==RETURN)
+                    if (T->ptr[0]->kind==RETURN || T->ptr[0]->kind == EXPSTMT)
                         T->code=merge(2,T->code,T->ptr[1]->code);
                     else
                         T->code=merge(3,T->code,genLabel(T->ptr[0]->Snext),T->ptr[1]->code);
@@ -490,48 +540,49 @@ void semantic_Analysis(node *T)
 //                        T->width+=T->ptr[1]->width;//顺序结构顺序分配单元方式
                     }
                 break;
+	//todo?
 	case IFSTMT:
-                strcpy(T->ptr[0]->ptr[0]->ptr[0]->Etrue,newLabel());  //设置条件语句真假转移位置
-                strcpy(T->ptr[0]->ptr[0]->ptr[0]->Efalse,T->Snext);
-                T->ptr[0]->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->offset;
-                boolExp(T->ptr[0]->ptr[0]->ptr[0]);
-                T->width=T->ptr[0]->ptr[0]->ptr[0]->width;
+                strcpy(T->ptr[0]->ptr[0]->Etrue,newLabel());  //设置条件语句真假转移位置
+                strcpy(T->ptr[0]->ptr[0]->Efalse,T->Snext);
+                T->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->offset;
+                boolExp(T->ptr[0]->ptr[0]);
+                T->width=T->ptr[0]->ptr[0]->width;
                 strcpy(T->ptr[1]->ptr[0]->Snext,T->Snext);
                 semantic_Analysis(T->ptr[1]->ptr[0]);      //if子句
                 if (T->width<T->ptr[1]->ptr[0]->width) T->width=T->ptr[1]->ptr[0]->width;
-                T->code=merge(3,T->ptr[0]->ptr[0]->ptr[0]->code, genLabel(T->ptr[0]->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code);
+                T->code=merge(3,T->ptr[0]->ptr[0]->code, genLabel(T->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code);
                 break;  //控制语句都还没有处理offset和width属性
 	case IFELSESTMT:
-                strcpy(T->ptr[0]->ptr[0]->ptr[0]->Etrue,newLabel());  //设置条件语句真假转移位置
-                strcpy(T->ptr[0]->ptr[0]->ptr[0]->Efalse,newLabel());
-                T->ptr[0]->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->ptr[2]->ptr[0]->offset=T->offset;
-                boolExp(T->ptr[0]->ptr[0]->ptr[0]);      //条件，要单独按短路代码处理
-                T->width=T->ptr[0]->ptr[0]->ptr[0]->width;
+                strcpy(T->ptr[0]->ptr[0]->Etrue,newLabel());  //设置条件语句真假转移位置
+                strcpy(T->ptr[0]->ptr[0]->Efalse,newLabel());
+                T->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->ptr[2]->ptr[0]->offset=T->offset;
+                boolExp(T->ptr[0]->ptr[0]);      //条件，要单独按短路代码处理
+                T->width=T->ptr[0]->ptr[0]->width;
                 strcpy(T->ptr[1]->ptr[0]->Snext,T->Snext);
                 semantic_Analysis(T->ptr[1]->ptr[0]);      //if子句
                 if (T->width<T->ptr[1]->ptr[0]->width) T->width=T->ptr[1]->ptr[0]->width;
                 strcpy(T->ptr[2]->ptr[0]->Snext,T->Snext);
                 semantic_Analysis(T->ptr[2]->ptr[0]);      //else子句
                 if (T->width<T->ptr[2]->ptr[0]->width) T->width=T->ptr[2]->ptr[0]->width;
-                T->code=merge(6,T->ptr[0]->ptr[0]->ptr[0]->code,genLabel(T->ptr[0]->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code,\
-                              genGoto(T->Snext),genLabel(T->ptr[0]->ptr[0]->ptr[0]->Efalse),T->ptr[2]->ptr[0]->code);
+                T->code=merge(6,T->ptr[0]->ptr[0]->code,genLabel(T->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code,\
+                              genGoto(T->Snext),genLabel(T->ptr[0]->ptr[0]->Efalse),T->ptr[2]->ptr[0]->code);
                 break;
-	case WHILESTMT: strcpy(T->ptr[0]->ptr[0]->ptr[0]->Etrue,newLabel());  //子结点继承属性的计算
-                strcpy(T->ptr[0]->ptr[0]->ptr[0]->Efalse,T->Snext);
-                T->ptr[0]->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->offset;
-                boolExp(T->ptr[0]->ptr[0]->ptr[0]);      //循环条件，要单独按短路代码处理
-                T->width=T->ptr[0]->ptr[0]->ptr[0]->width;
+	case WHILESTMT: strcpy(T->ptr[0]->ptr[0]->Etrue,newLabel());  //子结点继承属性的计算
+                strcpy(T->ptr[0]->ptr[0]->Efalse,T->Snext);
+                T->ptr[0]->ptr[0]->offset=T->ptr[1]->ptr[0]->offset=T->offset;
+                boolExp(T->ptr[0]->ptr[0]);      //循环条件，要单独按短路代码处理
+                T->width=T->ptr[0]->ptr[0]->width;
                 strcpy(T->ptr[1]->ptr[0]->Snext,newLabel());
                 semantic_Analysis(T->ptr[1]->ptr[0]);      //循环体
                 if (T->width<T->ptr[1]->ptr[0]->width) T->width=T->ptr[1]->ptr[0]->width;
-                T->code=merge(5,genLabel(T->ptr[1]->ptr[0]->Snext),T->ptr[0]->ptr[0]->ptr[0]->code, \
-                genLabel(T->ptr[0]->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code,genGoto(T->ptr[1]->ptr[0]->Snext));
+                T->code=merge(5,genLabel(T->ptr[1]->ptr[0]->Snext),T->ptr[0]->ptr[0]->code, \
+                genLabel(T->ptr[0]->ptr[0]->Etrue),T->ptr[1]->ptr[0]->code,genGoto(T->ptr[1]->ptr[0]->Snext));
                 break;
 	case RETURN:if (T->ptr[1]){
                     T->ptr[1]->offset=T->offset;
                     Exp(T->ptr[1]);
 
-				 /*需要判断返回值类型是否匹配*/
+		    //to do check
 
                     T->width=T->ptr[1]->width;
                     result.kind=T_Identifier; strcpy(result.id,symbolTable.symbols[T->ptr[1]->place].alias);
@@ -570,15 +621,18 @@ void semantic_Analysis(node *T)
 
 void semantic_Analysis0(node *T) {
     symbolTable.index=0;
-    fillSymbolTable("read","",0,'F',4);
-    symbolTable.symbols[0].paramnum=0;//read的形参个数
-    fillSymbolTable("write","",0,'F',4);
-    symbolTable.symbols[1].paramnum=1;
+    fillSymbolTable("readint","",0,'F',4);
+    symbolTable.symbols[0].paramnum=1;//read的形参个数
+    fillSymbolTable("print","",0,'F',4);
+    symbolTable.symbols[1].paramnum=2;
     fillSymbolTable("x","",1,'P',12);
+#if (DEBUG)               
+	prn_symbol(); 
+#endif
     symbol_scope_TX.TX[0]=0;  //外部变量在符号表中的起始序号为0
     symbol_scope_TX.top=1;
     T->offset=0;              //外部变量在数据区的偏移量
     semantic_Analysis(T);
-    prnIR(T->code);
+    //prnIR(T->code);
 } 
 

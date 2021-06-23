@@ -1,6 +1,6 @@
 
 int main() {
-    int i;
+    int i; int j;
     i = 0;
     while (i < 10) {
         i = i + 1;        
@@ -18,6 +18,7 @@ int main() {
 }
 
 int factor(int n) {
+    int i;
     if (n < 2) {
         return 1;
     }

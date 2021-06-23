@@ -15,7 +15,7 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
   if (T)
 	{
 	switch (T->kind) {
-	case PROGRAM:
+	case FUNCLIST:
 			if(T == NULL){
 				printf("Nothing In this Program.");				
 				break;			
@@ -38,7 +38,7 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 			display(T->ptr[1],indent+3);
                         break;
 	case VARDECL:
-			printf("%*c变量声明：\n", indent, ' ');
+			printf("%*c变量声明：\n", indent, ' ');	
 			display(T->ptr[0],indent+3);
 			display(T->ptr[1],indent+3);
                         break;
@@ -63,11 +63,13 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 	case ARGUMENTS:
 			printf("%*c函数形参表：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
+			display(T->ptr[1],indent+3);
 			break;
 	case ARGUMENT:
 			printf("%*c函数形参：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
 			display(T->ptr[1],indent+3);
+			break;
 	case FUNCDECL:
 			printf("%*c函数定义：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
@@ -75,9 +77,8 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 			display(T->ptr[2],indent+3);
 			break;
 	case FUNCSIGN:
-			printf("%*c函数签名：\n", indent, ' ');
+			printf("%*c%s\n",indent,' ',T->type_id);
 			display(T->ptr[0],indent+3);
-			display(T->ptr[1],indent+3);
 			break;
 	case FUNCRET:
 			printf("%*c函数返回类型：\n", indent, ' ');
@@ -101,15 +102,13 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
                         printf("%*cIF STATEMENT：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
 			display(T->ptr[1],indent+3);
-			display(T->ptr[0],indent+3);
-			display(T->ptr[1],indent+3);
-			display(T->ptr[2],indent+3);
 			break;
 	case IFELSESTMT:
 			printf("%*cIF ELSE STATEMENT：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
 			display(T->ptr[1],indent+3);
 			display(T->ptr[2],indent+3);
+			break;
 	case IFTEST:
 			printf("%*cIF条件：\n", indent, ' ');
 			display(T->ptr[0],indent+3);
@@ -129,8 +128,10 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 			break;
 	case T_Break:
 			printf("%*cBREAK：\n", indent, ' ');
+			break;
 	case T_Continue:
 			printf("%*cCONTINUE：\n", indent, ' ');
+			break;
 	case T_Int:
 			printf("%*cINT类型\n",indent,' ');
 			break;
@@ -148,6 +149,10 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
 			break;
 	case T_Return:
 			printf("%*cRETURN:\n",indent,' ');
+			break;
+	case EXPSTMT:
+			printf("%*cExpStmt：\n", indent, ' ');
+			display(T->ptr[0],indent+3);
 			break;
 	case '+':
 	case '-':

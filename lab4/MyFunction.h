@@ -12,9 +12,10 @@ void itoa(int i,char* string)
     *string='\0';
 }
 
-char *strcat0(char *a,const char *b){
-	char *p=a;
-	while(*p!='\0') p++;
-	while(*p++=*b++);
-	return a;
+char *strcat0(char *s1, char *s2)
+{
+	char* result = (char*)malloc(20 * sizeof(char));
+	strcpy(result, s1);
+	strcat(result, s2);
+	return result;
 }
